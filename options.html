@@ -3,39 +3,50 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Options - Anime New Tab</title>
+  <title>Options - New Tab</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    .options-wrap{max-width:900px;margin:28px auto;padding:20px;background:rgba(255,255,255,0.02);border-radius:12px}
-    label{display:block;margin:10px 0 6px;color:var(--muted)}
-    .small{font-size:13px;color:var(--muted)}
-    .btn{padding:10px 12px;border-radius:8px;border:none;background:rgba(255,255,255,0.06);cursor:pointer;color:var(--accent)}
-    input[type=file]{color:var(--muted)}
-  </style>
 </head>
 <body>
-  <div class="container options-wrap">
+  <div class="options-wrap"> 
     <h2>Customize New Tab</h2>
 
+    <div id="msg" class="message-box"></div> 
+    
+    <h3>Background Images</h3>
+    <div class="small" style="opacity:1; margin-top:-10px;">
+        **Default Images:** 1.jpg, 2.jpg, 3.jpg must be in the **images folder** in your extension's root directory. You can remove the uploaded images below.
+    </div>
     <div>
-      <label>Upload anime images (recommended HD JPG/PNG)</label>
-      <input id="fileInput" type="file" accept="image/*" multiple />
+      <label>Upload custom background images (recommended HD JPG/PNG)</label>
+      <input id="fileInput" type="file" accept="image/*" multiple /> 
       <div class="small">You can upload multiple images. They will be saved locally to your browser storage.</div>
     </div>
 
-    <div style="margin-top:12px">
+    <div style="margin-top:5px">
       <button id="clearBtn" class="btn">Remove all uploaded images</button>
     </div>
 
-    <hr style="margin:18px 0;border:none;height:1px;background:rgba(255,255,255,0.03)">
+    <div id="previewRow" class="thumbs" style="margin-top:15px">
+      </div>
+    
+    <hr class="separator">
+    <h3>System Settings</h3>
+    
+    <div>
+      <label>Time Format</label>
+      <div class="radio-group">
+        <label><input type="radio" name="timeFormat" id="timeFormat24h" value="24h" checked> 24-Hour (14:30)</label>
+        <label><input type="radio" name="timeFormat" id="timeFormat12h" value="12h"> 12-Hour (2:30 PM)</label>
+      </div>
+    </div>
 
     <div>
-      <label>Rotate interval (seconds) — 0 to disable</label>
+      <label>Rotate interval (seconds) — 0 to disable automatic rotation</label>
       <input id="rotateInput" type="number" min="0" step="1" value="0" />
     </div>
 
     <div>
-      <label><input id="randomizeCheckbox" type="checkbox" /> Randomize start background</label>
+      <label><input id="randomizeCheckbox" type="checkbox" /> Randomize first background image on load</label>
     </div>
 
     <div>
@@ -49,16 +60,25 @@
       <input id="overlayInput" type="range" min="0" max="1" step="0.05" value="0.35" />
       <span id="overlayVal" class="small">0.35</span>
     </div>
+    
+    <hr class="separator">
+    <h3>Quick Links Management</h3>
+    <div id="quickLinkManager">
+      <div id="linksList" class="links-list">
+        </div>
+      <div class="add-link-form">
+        <input type="text" id="newLinkName" placeholder="Link Name (e.g., Gmail)" style="flex:1;">
+        <input type="url" id="newLinkUrl" placeholder="URL (e.g., https://mail.google.com)" style="flex:2;">
+        <button id="addLinkBtn" class="btn" style="flex:0 0 100px;">Add Link</button>
+      </div>
+      <div class="small" style="margin-top:5px;">Only links starting with "http" or "https" will be saved.</div>
+    </div>
+    <hr class="separator">
 
     <div style="margin-top:14px">
-      <button id="saveBtn" class="btn">Save Settings</button>
-      <span id="msg" class="small" style="margin-left:12px"></span>
+      <button id="saveBtn" class="btn" style="width:100%">Save Settings</button>
     </div>
 
-    <hr style="margin:18px 0;border:none;height:1px;background:rgba(255,255,255,0.03)">
-
-    <h3>Preview / Current Images</h3>
-    <div id="previewRow" style="display:flex;gap:10px;flex-wrap:wrap"></div>
   </div>
 
   <script src="options.js"></script>

@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>New Tab</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    body { overflow: hidden; } 
+  </style>
 </head>
 <body>
   <div id="bg" class="bg"></div>
@@ -29,19 +32,13 @@
       </form>
 
       <div class="quick-links" id="quickLinks">
-        <a href="https://www.google.com" target="_blank">Google</a>
-        <a href="https://github.com" target="_blank">GitHub</a>
-        <a href="https://youtube.com" target="_blank">YouTube</a>
+        <p id="links-placeholder" style="color:var(--muted);font-size:14px;margin:8px 0;opacity:0.6;display:none;">No links added.</p>
       </div>
-          <section class="quote-box" id="quoteBox">
-      <p id="quoteText">"Loading inspiration..."</p>
+          <section class="quote-card">
+            <p id="quoteText" class="quote-text">Loading quote...</p>
+          </section>
     </section>
 
-    </section>
-
-    <section class="thumbs" id="thumbsContainer">
-      <!-- small preview thumbnails of uploaded images -->
-    </section>
   </main>
 
   <script src="newtab.js"></script>
