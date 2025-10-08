@@ -1,7 +1,7 @@
 
 # KireiTab - Your Anime New Tab Dashboard
 
-**KireiTab** replaces your default Chrome New Tab page with a beautiful, minimal, and fully customizable dashboard, featuring HD anime backgrounds, a clean clock, search, and your essential quick links.
+**KireiTab** (きれい) replaces your default Chrome New Tab page with a beautiful, minimal, and fully customizable dashboard, featuring HD anime backgrounds, a clean clock, search, and your essential quick links.
 
 [](https://www.google.com/search?q=https://github.com/khdxsohee/KireiTab/blob/main/LICENSE)
 [](https://github.com/khdxsohee/KireiTab)
