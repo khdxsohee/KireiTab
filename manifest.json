@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "My Anime New Tab",
+  "description": "Elegant HD new tab with your anime backgrounds, search, clock and quick links.",
+  "version": "1.0",
+
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "action": {},
+  "options_page": "options.html"
+}
