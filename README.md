@@ -1,4 +1,8 @@
-
+[![GitHub license](https://img.shields.io/github/license/khdxsohee/KireiTab?style=flat-square&color=blue)](https://github.com/khdxsohee/KireiTab/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/khdxsohee/KireiTab?style=flat-square&color=red)](https://github.com/khdxsohee/KireiTab/issues)
+[![GitHub forks](https://img.shields.io/github/forks/khdxsohee/KireiTab?style=flat-square&color=teal)](https://github.com/khdxsohee/KireiTab/network)
+[![Project Status](https://img.shields.io/badge/status-In%20Development-orange?style=flat-square)](https://github.com/khdxsohee/KireiTab)
+[![Manifest Version](https://img.shields.io/badge/manifest-V3-success?style=flat-square)](https://developer.chrome.com/docs/extensions/mv3/)
 # KireiTab - Your Anime New Tab Dashboard
 
 **KireiTab** (きれい) replaces your default Chrome New Tab page with a beautiful, minimal, and fully customizable dashboard, featuring HD anime backgrounds, a clean clock, search, and your essential quick links.
