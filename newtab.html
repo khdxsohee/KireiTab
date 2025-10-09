@@ -1,14 +1,18 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>New Tab</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    body { overflow: hidden; } 
+    body {
+      overflow: hidden;
+    }
   </style>
 </head>
+
 <body>
   <div id="bg" class="bg"></div>
 
@@ -27,20 +31,23 @@
 
     <section class="search-card">
       <form id="searchForm" class="search-form" autocomplete="off">
-        <input id="searchInput" class="search-input" name="q" type="search" placeholder="Search Google or type a URL..." />
+        <input id="searchInput" class="search-input" name="q" type="search"
+          placeholder="Search Google or type a URL..." />
         <button type="submit" class="search-btn">Search</button>
       </form>
 
       <div class="quick-links" id="quickLinks">
-        <p id="links-placeholder" style="color:var(--muted);font-size:14px;margin:8px 0;opacity:0.6;display:none;">No links added.</p>
+        <p id="links-placeholder" style="color:var(--muted);font-size:14px;margin:8px 0;opacity:0.6;display:none;">No
+          links added.</p>
       </div>
-          <section class="quote-card">
-            <p id="quoteText" class="quote-text">Loading quote...</p>
-          </section>
+      <section class="quote-card">
+        <p id="quoteText" class="quote-text">Loading quote...</p>
+      </section>
     </section>
 
   </main>
 
   <script src="newtab.js"></script>
 </body>
+
 </html>

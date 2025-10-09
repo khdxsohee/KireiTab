@@ -9,9 +9,9 @@ const quoteBox = document.getElementById('quoteText');
 
 // CORRECTED: Default images list points to the 'images' folder
 const DEFAULT_IMAGES = [
-    { path: 'images/1.jpg', name: 'Default 1' },
-    { path: 'images/2.jpg', name: 'Default 2' },
-    { path: 'images/3.jpg', name: 'Default 3' }
+  { path: 'images/1.jpg', name: 'Default 1' },
+  { path: 'images/2.jpg', name: 'Default 2' },
+  { path: 'images/3.jpg', name: 'Default 3' }
 ];
 
 let settings = {
@@ -87,7 +87,7 @@ function applySettings() {
       setBackground(images[idx]); // Pass the image object
     }, settings.rotateInterval * 1000);
   }
-  
+
   updateClock();
 }
 
@@ -103,7 +103,7 @@ function loadFromStorage() {
     const storedImages = res.animeImages || [];
     // Combine defaults with user-uploaded images for display/rotation
     images = [...DEFAULT_IMAGES, ...storedImages];
-    
+
     if (images.length > 0) {
       let startIdx = 0;
       if (settings.randomize) {
@@ -113,8 +113,8 @@ function loadFromStorage() {
       // Restart rotation if needed (applySettings handles this)
       applySettings();
     } else {
-        // Fallback to the first default image if even the defaults are somehow missing from the array (shouldn't happen)
-        setBackground(DEFAULT_IMAGES[0]); 
+      // Fallback to the first default image if even the defaults are somehow missing from the array (shouldn't happen)
+      setBackground(DEFAULT_IMAGES[0]);
     }
 
     // Load quick links
@@ -188,7 +188,7 @@ chrome.storage.onChanged.addListener((changes) => {
   }
   if (changes.animeImages) {
     // If images change, force a re-load to correctly combine defaults + uploaded and restart rotation
-    loadFromStorage(); 
+    loadFromStorage();
   }
   if (changes.quickLinks) {
     quickLinks = changes.quickLinks.newValue || [];
