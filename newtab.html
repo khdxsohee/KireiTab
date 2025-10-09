@@ -21,29 +21,78 @@
   <main class="container">
     <header class="top-row">
       <div class="left">
-        <div id="clock" class="clock">00:00</div>
-        <div id="greeting" class="greeting">Welcome</div>
+        <div class="weather-placeholder">
+            <span class="icon" id="weatherIcon">☁️</span>
+            <span class="temp" id="weatherTemp">--°C</span>
+            <div class="location" id="weatherLocation">Click to enable</div>
+        </div>
       </div>
       <div class="right">
-        <a class="icon-btn" id="open-options" title="Customize">⚙️</a>
-      </div>
+        </div>
     </header>
 
-    <section class="search-card">
+    <section class="main-content">
       <form id="searchForm" class="search-form" autocomplete="off">
+        <div class="search-icon">🔍</div>
         <input id="searchInput" class="search-input" name="q" type="search"
-          placeholder="Search Google or type a URL..." />
-        <button type="submit" class="search-btn">Search</button>
+          placeholder="Search" />
       </form>
 
-      <div class="quick-links" id="quickLinks">
-        <p id="links-placeholder" style="color:var(--muted);font-size:14px;margin:8px 0;opacity:0.6;display:none;">No
-          links added.</p>
+      <div class="center-time">
+        <div id="clock" class="clock">00:00</div>
+        <div id="date-display" class="date-display">00.00.0000 THU</div>
       </div>
-      <section class="quote-card">
-        <p id="quoteText" class="quote-text">Loading quote...</p>
-      </section>
     </section>
+
+  
+        <!-- newtab.html - bottom bar section ko update karein -->
+<footer class="bottom-bar">
+    <a class="bottom-link" id="open-options" title="Settings">
+        <span class="icon">⚙️</span> Settings
+    </a>
+    <a class="bottom-link" id="open-apps" title="Apps">
+        <span class="icon">📱</span> Apps
+    </a>
+    <a class="bottom-link" id="open-todos" title="Todos">
+        <span class="icon">✅</span> Todos
+    </a>
+</footer>
+
+<!-- Apps Modal -->
+<!-- Apps Modal -->
+<div id="appsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🚀 Quick Apps</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="apps-grid" id="appsGrid">
+            <!-- Apps dynamically loaded from newtab.js -->
+        </div>
+    </div>
+</div>
+
+<!-- Todos Modal -->
+<div id="todosModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📝 My Todo List</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="todos-container">
+            <div class="add-todo-form">
+                <input type="text" id="newTodoInput" placeholder="✏️ Add a new task..." />
+                <button id="addTodoBtn" class="btn">Add Task</button>
+            </div>
+            <div class="todos-list" id="todosList">
+                <!-- Todos dynamically loaded -->
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+    </footer>
 
   </main>
 

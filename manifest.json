@@ -12,7 +12,12 @@
     "newtab": "newtab.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "geolocation"
+  ],
+  "host_permissions": [
+    "https://api.open-meteo.com/*",
+    "https://api.bigdatacloud.net/*"
   ],
   "action": {},
   "options_page": "options.html"

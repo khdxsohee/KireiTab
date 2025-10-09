@@ -2,10 +2,7 @@
 const bgEl = document.getElementById('bg');
 const overlayEl = document.getElementById('overlay');
 const clockEl = document.getElementById('clock');
-const greetingEl = document.getElementById('greeting');
-const quickLinksEl = document.getElementById('quickLinks');
-const linksPlaceholderEl = document.getElementById('links-placeholder');
-const quoteBox = document.getElementById('quoteText');
+const dateEl = document.getElementById('date-display');
 
 // CORRECTED: Default images list points to the 'images' folder
 const DEFAULT_IMAGES = [
@@ -23,19 +20,11 @@ let settings = {
 };
 
 let quickLinks = [];
-let images = []; // Combined list of DEFAULT_IMAGES + uploaded image IDs
+let images = []; 
 let rotateTimer = null;
-let currentObjectURL = null; // NEW: To track and revoke the object URL
+let currentObjectURL = null;
 
-const quotes = [
-  `"A lesson without pain is meaningless." — Edward Elric`,
-  `"Fear is freedom! Subjugation is liberation!" — Satsuki Kiryuuin`,
-  `"No matter how deep the night, it always turns to day." — Brook (One Piece)`,
-  `"When you give up, your dreams and everything else they’re gone." — Ichigo Kurosaki`,
-  `"A lesson in chasing dreams: never stop running." — Naruto Uzumaki`,
-  `"You can’t sit around envying other people’s worlds. You have to go out and change your own." — Chiaki Mamiya"`
-];
-
+// Time display logic
 function formatTime(d) {
   let hh = d.getHours();
   const mm = String(d.getMinutes()).padStart(2, '0');
@@ -44,7 +33,7 @@ function formatTime(d) {
   if (settings.timeFormat === '12h') {
     ampm = hh >= 12 ? ' PM' : ' AM';
     hh = hh % 12;
-    hh = hh ? hh : 12; // the hour '0' should be '12'
+    hh = hh ? hh : 12;
     return `${hh}:${mm}${ampm}`;
   } else {
     hh = String(hh).padStart(2, '0');
@@ -54,41 +43,100 @@ function formatTime(d) {
 
 function updateClock() {
   const now = new Date();
-  clockEl.textContent = formatTime(now);
-
-  // Greeting logic
-  const hour = now.getHours();
-  let greetingText = 'Hello';
-  if (hour < 12) {
-    greetingText = 'Good morning';
-  } else if (hour < 18) {
-    greetingText = 'Good afternoon';
-  } else {
-    greetingText = 'Good evening';
+  
+  if (clockEl) {
+    clockEl.textContent = formatTime(now);
   }
-  greetingEl.textContent = greetingText;
+  
+  if (dateEl) {
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const weekday = now.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+    dateEl.textContent = `${day}.${month}.${year} ${weekday}`;
+  }
 }
 
-// UPDATED: Now accepts an image object and determines the URL (path or fetched Blob URL)
+// Weather functionality
+async function updateWeather() {
+    const tempEl = document.getElementById('weatherTemp');
+    const locationEl = document.getElementById('weatherLocation');
+    const iconEl = document.getElementById('weatherIcon');
+    
+    if (!tempEl || !locationEl || !iconEl) return;
+    
+    try {
+        // Get location first
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                timeout: 10000,
+                enableHighAccuracy: false
+            });
+        });
+        
+        const { latitude, longitude } = position.coords;
+        
+        // Weather API call
+        const response = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+        );
+        
+        const data = await response.json();
+        const weather = data.current_weather;
+        
+        // Update weather display
+        tempEl.textContent = `${Math.round(weather.temperature)}°C`;
+        
+        // Get location name
+        const locationResponse = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+        );
+        const locationData = await locationResponse.json();
+        locationEl.textContent = locationData.city || locationData.locality || 'Unknown';
+        
+        // Weather icon mapping
+        const weatherCode = weather.weathercode;
+        let icon = '☁️';
+        
+        if (weatherCode === 0) icon = '☀️';
+        else if (weatherCode >= 1 && weatherCode <= 3) icon = '⛅';
+        else if (weatherCode >= 45 && weatherCode <= 48) icon = '🌫️';
+        else if (weatherCode >= 51 && weatherCode <= 67) icon = '🌧️';
+        else if (weatherCode >= 71 && weatherCode <= 77) icon = '❄️';
+        else if (weatherCode >= 80 && weatherCode <= 82) icon = '🌦️';
+        else if (weatherCode >= 95 && weatherCode <= 99) icon = '⛈️';
+        
+        iconEl.textContent = icon;
+        
+    } catch (error) {
+        console.log('Weather data unavailable:', error);
+        tempEl.textContent = '--°C';
+        locationEl.textContent = 'Enable location';
+        iconEl.textContent = '📍';
+        
+        // Make weather clickable to retry
+        locationEl.style.cursor = 'pointer';
+        locationEl.onclick = updateWeather;
+    }
+}
+
+// Background setting logic
 async function setBackground(imageObj) {
   let url;
 
-  // Revoke the previous object URL if it exists
   if (currentObjectURL) {
     URL.revokeObjectURL(currentObjectURL);
     currentObjectURL = null;
   }
 
   if (imageObj.path) {
-    // Default image, use its static path
     url = imageObj.path;
   } else if (imageObj.id) {
-    // Uploaded image, fetch the Blob from IndexedDB
     try {
-      const blob = await getImageBlob(imageObj.id);
+      const blob = await getImageBlob(imageObj.id); 
       if (blob) {
         url = URL.createObjectURL(blob);
-        currentObjectURL = url; // Store the new object URL for revocation
+        currentObjectURL = url;
       } else {
         console.error('Blob not found for ID:', imageObj.id);
         return;
@@ -105,19 +153,20 @@ async function setBackground(imageObj) {
 }
 
 function applySettings() {
-  overlayEl.style.backgroundColor = `rgba(7,10,25,${settings.overlayOpacity})`;
-  bgEl.style.filter = `brightness(0.9) blur(${settings.blur}px)`;
+  if (overlayEl) {
+    overlayEl.style.backgroundColor = `rgba(7,10,25,${settings.overlayOpacity})`;
+  }
+  if (bgEl) {
+    bgEl.style.filter = `brightness(0.9) blur(${settings.blur}px)`;
+  }
 
   // Rotate logic
   if (rotateTimer) clearInterval(rotateTimer);
   if (settings.rotateInterval > 0 && images.length > 1) {
     let idx = 0;
-    // Find the current background image to start rotation from it
-    // NOTE: This logic is simplified; a more robust solution would track the *currently displayed* image ID
-    // For now, we'll just start at the beginning of the list after load.
     rotateTimer = setInterval(() => {
       idx = (idx + 1) % images.length;
-      setBackground(images[idx]); // Pass the image object (path or id)
+      setBackground(images[idx]);
     }, settings.rotateInterval * 1000);
   }
 
@@ -133,17 +182,14 @@ async function loadFromStorage() {
   if (res.settings) {
     settings = { ...settings, ...res.settings };
   }
-  applySettings();
 
   // Load images
   const storedImageIDs = res.uploadedImageIDs || [];
-  // Transform stored IDs into image objects for the 'images' array
   const uploadedImages = storedImageIDs.map(item => ({
     id: item.id,
-    name: `Uploaded ${item.id}` 
+    name: `Uploaded ${item.id}`
   }));
 
-  // Combine defaults with user-uploaded images (now just IDs) for display/rotation
   images = [...DEFAULT_IMAGES, ...uploadedImages];
 
   if (images.length > 0) {
@@ -151,40 +197,24 @@ async function loadFromStorage() {
     if (settings.randomize) {
       startIdx = Math.floor(Math.random() * images.length);
     }
-    setBackground(images[startIdx]); // Pass the image object (path or ID)
-    // Restart rotation if needed (applySettings handles this)
-    applySettings();
+    await setBackground(images[startIdx]);
   } else {
-    // Fallback to the first default image
-    setBackground(DEFAULT_IMAGES[0]);
+    await setBackground(DEFAULT_IMAGES[0]);
   }
 
-  // Load quick links
+  applySettings();
+
   quickLinks = res.quickLinks || [
     { name: "Google", url: "https://www.google.com" },
     { name: "GitHub", url: "https://github.com" },
     { name: "YouTube", url: "https://youtube.com" }
   ];
-  renderQuickLinks();
+
+  // Load weather
+  updateWeather();
 }
 
-function renderQuickLinks() {
-  quickLinksEl.innerHTML = '';
-  if (quickLinks && quickLinks.length > 0) {
-    linksPlaceholderEl.style.display = 'none';
-    quickLinks.forEach(link => {
-      const a = document.createElement('a');
-      a.href = link.url;
-      a.target = '_blank';
-      a.textContent = link.name;
-      quickLinksEl.appendChild(a);
-    });
-  } else {
-    linksPlaceholderEl.style.display = 'block';
-  }
-}
-
-
+// Event Listeners
 document.getElementById('searchForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const q = document.getElementById('searchInput').value.trim();
@@ -196,7 +226,6 @@ document.getElementById('searchForm').addEventListener('submit', (e) => {
   window.open(target, '_self');
 });
 
-// keyboard shortcut: focus search when "/" pressed
 window.addEventListener('keydown', (e) => {
   if (e.key === '/') {
     e.preventDefault();
@@ -209,37 +238,215 @@ document.getElementById('open-options').addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
 });
 
-// show random quote
-function showQuote() {
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
-  quoteBox.textContent = q;
-}
+// Make weather clickable
+document.getElementById('weatherLocation').addEventListener('click', updateWeather);
 
-// Initialize
-updateClock();
-setInterval(updateClock, 1000);
-showQuote();
-loadFromStorage();
+// Initialization
+document.addEventListener('DOMContentLoaded', function() {
+  updateClock(); // Immediate first update
+  loadFromStorage();
+  setInterval(updateClock, 1000); // Regular updates
+});
 
-// react to settings updates live
+// React to settings updates live
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.settings) {
     settings = { ...settings, ...changes.settings.newValue };
     applySettings();
   }
-  // The list of uploadedImageIDs is small, so we reload to update the `images` array
   if (changes.uploadedImageIDs) {
     loadFromStorage();
   }
   if (changes.quickLinks) {
     quickLinks = changes.quickLinks.newValue || [];
-    renderQuickLinks();
   }
 });
 
-// Cleanup: Revoke object URL when the newtab page is closed/unloaded
+// Cleanup
 window.addEventListener('beforeunload', () => {
     if (currentObjectURL) {
         URL.revokeObjectURL(currentObjectURL);
     }
+});
+
+
+
+// newtab.js - Existing code ke baad yeh add karein
+
+// Apps and Todos functionality
+const appsModal = document.getElementById('appsModal');
+const todosModal = document.getElementById('todosModal');
+const appsGrid = document.getElementById('appsGrid');
+const todosList = document.getElementById('todosList');
+const newTodoInput = document.getElementById('newTodoInput');
+const addTodoBtn = document.getElementById('addTodoBtn');
+
+// Popular apps with icons
+const popularApps = [
+    { name: "YouTube", url: "https://youtube.com", icon: "📺" },
+    { name: "Google", url: "https://google.com", icon: "🔍" },
+    { name: "Gmail", url: "https://mail.google.com", icon: "📧" },
+    { name: "Drive", url: "https://drive.google.com", icon: "💾" },
+    { name: "Instagram", url: "https://instagram.com", icon: "📷" },
+    { name: "Facebook", url: "https://facebook.com", icon: "👥" },
+    { name: "Twitter", url: "https://twitter.com", icon: "🐦" },
+    { name: "GitHub", url: "https://github.com", icon: "💻" },
+    { name: "Netflix", url: "https://netflix.com", icon: "🎬" },
+    { name: "Amazon", url: "https://amazon.com", icon: "📦" },
+    { name: "WhatsApp", url: "https://web.whatsapp.com", icon: "💬" },
+    { name: "Spotify", url: "https://open.spotify.com", icon: "🎵" },
+    { name: "Reddit", url: "https://reddit.com", icon: "📱" },
+    { name: "LinkedIn", url: "https://linkedin.com", icon: "💼" },
+    { name: "Pinterest", url: "https://pinterest.com", icon: "📌" },
+    { name: "TikTok", url: "https://tiktok.com", icon: "🎵" }
+];
+
+// Modal functions
+function openModal(modal) {
+    modal.style.display = 'block';
+}
+
+function closeModal(modal) {
+    modal.style.display = 'none';
+}
+
+// Load apps
+function loadApps() {
+    appsGrid.innerHTML = '';
+    popularApps.forEach(app => {
+        const appElement = document.createElement('a');
+        appElement.href = app.url;
+        appElement.target = '_blank';
+        appElement.className = 'app-item';
+        appElement.innerHTML = `
+            <div class="app-icon">${app.icon}</div>
+            <div class="app-name">${app.name}</div>
+        `;
+        appsGrid.appendChild(appElement);
+    });
+}
+
+// Load todos from storage
+async function loadTodos() {
+    const result = await chrome.storage.local.get(['todos']);
+    const todos = result.todos || [];
+    renderTodos(todos);
+}
+
+// Render todos
+function renderTodos(todos) {
+    todosList.innerHTML = '';
+    
+    if (todos.length === 0) {
+        todosList.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No tasks yet. Add your first task!</div>';
+        return;
+    }
+    
+    todos.forEach((todo, index) => {
+        const todoElement = document.createElement('div');
+        todoElement.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+        todoElement.innerHTML = `
+            <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-index="${index}">
+            <span class="todo-text">${todo.text}</span>
+            <button class="todo-delete" data-index="${index}">🗑️</button>
+        `;
+        todosList.appendChild(todoElement);
+    });
+    
+    // Add event listeners
+    document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', toggleTodo);
+    });
+    
+    document.querySelectorAll('.todo-delete').forEach(button => {
+        button.addEventListener('click', deleteTodo);
+    });
+}
+
+// Add new todo
+async function addTodo() {
+    const text = newTodoInput.value.trim();
+    if (!text) return;
+    
+    const result = await chrome.storage.local.get(['todos']);
+    const todos = result.todos || [];
+    
+    todos.push({
+        text: text,
+        completed: false,
+        id: Date.now()
+    });
+    
+    await chrome.storage.local.set({ todos });
+    newTodoInput.value = '';
+    loadTodos();
+}
+
+// Toggle todo completion
+async function toggleTodo(event) {
+    const index = parseInt(event.target.dataset.index);
+    const result = await chrome.storage.local.get(['todos']);
+    const todos = result.todos || [];
+    
+    if (todos[index]) {
+        todos[index].completed = !todos[index].completed;
+        await chrome.storage.local.set({ todos });
+        loadTodos();
+    }
+}
+
+// Delete todo
+async function deleteTodo(event) {
+    const index = parseInt(event.target.dataset.index);
+    const result = await chrome.storage.local.get(['todos']);
+    const todos = result.todos || [];
+    
+    if (todos[index]) {
+        todos.splice(index, 1);
+        await chrome.storage.local.set({ todos });
+        loadTodos();
+    }
+}
+
+// Event listeners for modals
+document.getElementById('open-apps').addEventListener('click', () => {
+    loadApps();
+    openModal(appsModal);
+});
+
+document.getElementById('open-todos').addEventListener('click', () => {
+    loadTodos();
+    openModal(todosModal);
+});
+
+// Close modals when clicking X
+document.querySelectorAll('.close').forEach(closeBtn => {
+    closeBtn.addEventListener('click', () => {
+        closeModal(appsModal);
+        closeModal(todosModal);
+    });
+});
+
+// Close modals when clicking outside
+window.addEventListener('click', (event) => {
+    if (event.target === appsModal) {
+        closeModal(appsModal);
+    }
+    if (event.target === todosModal) {
+        closeModal(todosModal);
+    }
+});
+
+// Add todo event listeners
+addTodoBtn.addEventListener('click', addTodo);
+newTodoInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        addTodo();
+    }
+});
+
+// Initial load
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    loadTodos(); // Preload todos
 });
