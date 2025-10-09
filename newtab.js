@@ -111,12 +111,54 @@ async function applySettings() {
       await setBackground(images[i]);
     }, settings.rotateInterval * 1000);
   }
+
   updateClock();
 }
 
 /**
  * Render quick links or placeholder
  */
+
+
+  updateClock();
+}
+
+function loadFromStorage() {
+  chrome.storage.local.get(['settings', 'animeImages', 'quickLinks'], (res) => {
+    // Load settings
+    if (res.settings) {
+      settings = { ...settings, ...res.settings };
+    }
+    applySettings();
+
+    // Load images
+    const storedImages = res.animeImages || [];
+    // Combine defaults with user-uploaded images for display/rotation
+    images = [...DEFAULT_IMAGES, ...storedImages];
+
+    if (images.length > 0) {
+      let startIdx = 0;
+      if (settings.randomize) {
+        startIdx = Math.floor(Math.random() * images.length);
+      }
+      setBackground(images[startIdx]); // Pass the image object
+      // Restart rotation if needed (applySettings handles this)
+      applySettings();
+    } else {
+      // Fallback to the first default image if even the defaults are somehow missing from the array (shouldn't happen)
+      setBackground(DEFAULT_IMAGES[0]);
+    }
+
+    // Load quick links
+    quickLinks = res.quickLinks || [
+      { name: "Google", url: "https://www.google.com" },
+      { name: "GitHub", url: "https://github.com" },
+      { name: "YouTube", url: "https://youtube.com" }
+    ];
+    renderQuickLinks();
+  });
+}
+
 function renderQuickLinks() {
   quickLinksEl.innerHTML = '';
   if (quickLinks.length > 0) {
@@ -260,7 +302,14 @@ chrome.storage.onChanged.addListener((changes) => {
     settings = { ...settings, ...changes.settings.newValue };
     applySettings();
   }
+
   if (changes.animeImages) loadImages();
+
+  if (changes.animeImages) {
+    // If images change, force a re-load to correctly combine defaults + uploaded and restart rotation
+    loadFromStorage();
+  }
+
   if (changes.quickLinks) {
     quickLinks = changes.quickLinks.newValue || [];
     renderQuickLinks();
