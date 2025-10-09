@@ -26,7 +26,7 @@ KireiTab is designed for speed, style, and personalization.
 | | **Todo & Apps** | Quick access to your installed Chrome Apps and a simple, local Todo List for daily tasks.. |
 | **⚙️ Usability** | **Randomized Start** | Option to load a different background every time a new tab opens. |
 | | **Fast Search Focus** | Hit the **`/` key** anywhere on the page to instantly focus the search bar. |
-| | **Secure Storage** | All settings and custom images are stored locally in your browser, not on external servers. |
+| | **Private & Local Storage** | All settings, quick links, and custom images are stored locally in your browser's IndexedDB and Chrome Storage, ensuring full privacy and speed.. |
 <img width="1366" height="768" alt="Kireitab" src="https://github.com/user-attachments/assets/4bad4b95-0a39-41a8-99c5-a0edb4c9662f" />
 
 
@@ -90,6 +90,18 @@ We welcome contributions\! If you have suggestions for a feature, design improve
 3.  Commit your changes (`git commit -m 'feat: Add new feature'`).
 4.  Push to the branch (`git push origin feature/new-feature-name`).
 5.  Open a **Pull Request**.
+
+-----
+
+
+## 💻 Tech Stack
+
+KireiTab is built for maximum speed and performance with a minimal, modern tech stack:
+
+* **Core:** **Plain JavaScript, HTML5, CSS3** (No heavy frameworks).
+* **Extension:** **Manifest V3** for modern security and **Chrome Storage API** for settings.
+* **Data:** **IndexedDB** for secure, local storage of custom HD background images.
+* **Planned Features:** Integrates **Geolocation** and external APIs for weather.
 
 -----
 
