@@ -26,7 +26,8 @@ KireiTab is designed for speed, style, and personalization.
 | **⚙️ Usability** | **Randomized Start** | Option to load a different background every time a new tab opens. |
 | | **Fast Search Focus** | Hit the **`/` key** anywhere on the page to instantly focus the search bar. |
 | | **Secure Storage** | All settings and custom images are stored locally in your browser, not on external servers. |
-<img width="1366" height="768" alt="Screenshot (3)" src="https://github.com/user-attachments/assets/3bd5737b-a16e-4222-9ba5-7f0eec3a09a2" />
+<img width="1366" height="768" alt="Kireitab" src="https://github.com/user-attachments/assets/4bad4b95-0a39-41a8-99c5-a0edb4c9662f" />
+
 
 ## 🚀 Installation
 
