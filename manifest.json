@@ -3,7 +3,11 @@
   "name": "Kirei Tab - Your Anime NewTab",
   "description": "Elegant HD new tab with your anime backgrounds, search, clock and quick links.",
   "version": "1.0",
-
+"icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
