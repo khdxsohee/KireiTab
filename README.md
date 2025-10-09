@@ -23,6 +23,7 @@ KireiTab is designed for speed, style, and personalization.
 | **⌚ Utilities** | **Customizable Clock** | Choose between **12-hour (AM/PM)** or **24-hour** time format. |
 | | **Quick Links Management** | Add, edit, and remove your essential URLs (e.g., GitHub, YouTube, Reddit) directly from the options page. |
 | | **Integrated Search** | A central search bar for quick Google queries or direct URL navigation. |
+| | **Todo & Apps** | A quick and easy way to discover most used apps and todo for scheduling daily tasks. |
 | **⚙️ Usability** | **Randomized Start** | Option to load a different background every time a new tab opens. |
 | | **Fast Search Focus** | Hit the **`/` key** anywhere on the page to instantly focus the search bar. |
 | | **Secure Storage** | All settings and custom images are stored locally in your browser, not on external servers. |
