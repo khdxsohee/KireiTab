@@ -10,6 +10,5 @@
   "permissions": [
     "storage"
   ],
-  "action": {},
   "options_page": "options.html"
 }

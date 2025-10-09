@@ -1,24 +1,27 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Options - New Tab</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <div class="options-wrap"> 
+  <div class="options-wrap">
     <h2>Customize New Tab</h2>
 
-    <div id="msg" class="message-box"></div> 
-    
+    <div id="msg" class="message-box"></div>
+
     <h3>Background Images</h3>
     <div class="small" style="opacity:1; margin-top:-10px;">
-        **Default Images:** 1.jpg, 2.jpg, 3.jpg must be in the **images folder** in your extension's root directory. You can remove the uploaded images below.
+      **Default Images:** 1.jpg, 2.jpg, 3.jpg must be in the **images folder** in your extension's root directory. You
+      can remove the uploaded images below.
     </div>
     <div>
       <label>Upload custom background images (recommended HD JPG/PNG)</label>
-      <input id="fileInput" type="file" accept="image/*" multiple /> 
+      <input id="fileInput" type="file" accept="image/*" multiple />
       <div class="small">You can upload multiple images. They will be saved locally to your browser storage.</div>
     </div>
 
@@ -27,11 +30,11 @@
     </div>
 
     <div id="previewRow" class="thumbs" style="margin-top:15px">
-      </div>
-    
+    </div>
+
     <hr class="separator">
     <h3>System Settings</h3>
-    
+
     <div>
       <label>Time Format</label>
       <div class="radio-group">
@@ -46,7 +49,8 @@
     </div>
 
     <div>
-      <label><input id="randomizeCheckbox" type="checkbox" /> Randomize first background image on load</label>
+      <label><input id="randomizeCheckbox" type="checkbox" checked /> Randomize first background image on load</label>
+      <div class="small" style="margin-top:3px;">When enabled, each new tab will show a random image from your collection.</div>
     </div>
 
     <div>
@@ -60,12 +64,12 @@
       <input id="overlayInput" type="range" min="0" max="1" step="0.05" value="0.35" />
       <span id="overlayVal" class="small">0.35</span>
     </div>
-    
+
     <hr class="separator">
     <h3>Quick Links Management</h3>
     <div id="quickLinkManager">
       <div id="linksList" class="links-list">
-        </div>
+      </div>
       <div class="add-link-form">
         <input type="text" id="newLinkName" placeholder="Link Name (e.g., Gmail)" style="flex:1;">
         <input type="url" id="newLinkUrl" placeholder="URL (e.g., https://mail.google.com)" style="flex:2;">
@@ -80,7 +84,10 @@
     </div>
 
   </div>
-
+  
+  <script src="db.js"></script>
   <script src="options.js"></script>
+
 </body>
+
 </html>
