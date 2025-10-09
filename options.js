@@ -1,6 +1,4 @@
-// options.js - Handles image uploads, system settings, and quick links management
-
-// DOM element references
+// options.js
 const fileInput = document.getElementById('fileInput');
 const clearBtn = document.getElementById('clearBtn');
 const previewRow = document.getElementById('previewRow');
@@ -24,177 +22,50 @@ const DEFAULT_IMAGES = [
 // NEW ELEMENTS
 const timeFormat24h = document.getElementById('timeFormat24h');
 const timeFormat12h = document.getElementById('timeFormat12h');
-
 const linksList = document.getElementById('linksList');
 const newLinkName = document.getElementById('newLinkName');
 const newLinkUrl = document.getElementById('newLinkUrl');
 const addLinkBtn = document.getElementById('addLinkBtn');
 
-let quickLinks = [];
+let quickLinks = []; // Local array to hold links
+// NEW: uploadedImageIDs now stores only the IDs (keys) from IndexedDB
+let uploadedImageIDs = [];
+// This map will store Object URLs for uploaded images for preview only
+const objectUrlMap = new Map();
 
-// Default bundled images (read-only, cannot be deleted)
-const DEFAULT_IMAGES = [
-  { path: 'images/1.jpg', name: 'Default 1' },
-  { path: 'images/2.jpg', name: 'Default 2' },
-  { path: 'images/3.jpg', name: 'Default 3' }
-];
 
-/**
- * Show temporary message to user
- * @param {string} text - Message to display
- * @param {number} timeout - Duration in ms (default 2500)
- */
-function showMessage(text, timeout = 2500) {
-  msg.textContent = text;
-  setTimeout(() => (msg.textContent = ''), timeout);
-}
-
-/**
- * Render image previews (default images + uploaded images from IndexedDB)
- */
-async function renderPreviews() {
-  previewRow.innerHTML = '';
-
-  // First, display default bundled images
-  DEFAULT_IMAGES.forEach((img) => {
-    const div = document.createElement('div');
-    div.className = 'thumb';
-    div.style.backgroundImage = `url(${img.path})`;
-    div.style.cursor = 'default';
-    div.style.opacity = '0.9';
-    div.title = `Default Image: ${img.name}`;
-    div.innerHTML = `<span class="default-tag">DEFAULT</span>`;
-    previewRow.appendChild(div);
-  });
-
-  // Then, display user-uploaded images from IndexedDB
-  const storedIds = (await getStoredImageIds()) || [];
-  
-  if (storedIds.length === 0) {
-    const infoDiv = document.createElement('div');
-    infoDiv.style.cssText = 'grid-column: 1/-1; text-align: center; padding: 20px; color: var(--muted); opacity: 0.7;';
-    infoDiv.textContent = 'No uploaded images yet. Upload some images above!';
-    previewRow.appendChild(infoDiv);
-  }
-  
-  for (let i = 0; i < storedIds.length; i++) {
-    const id = storedIds[i];
-    const blob = await KireiDB.getImage(id);
-    if (!blob) continue;
-
-    // Create object URL for preview display
-    const objectUrl = URL.createObjectURL(blob);
-    const div = document.createElement('div');
-    div.className = 'thumb';
-    div.style.backgroundImage = `url(${objectUrl})`;
-    div.title = `Click to remove (ID: ${id}, Size: ${(blob.size / 1024 / 1024).toFixed(2)}MB)`;
-    
-    // Store object URL for later cleanup
-    div.dataset.objectUrl = objectUrl;
-    
-    // Handle image deletion
-    div.onclick = async () => {
-      if (!confirm('Remove this image?')) return;
-      
-      // Clean up object URL
-      URL.revokeObjectURL(div.dataset.objectUrl);
-      
-      // Delete from IndexedDB
-      await KireiDB.deleteImage(id);
-      
-      // Update chrome.storage.local
-      const newIds = (await getStoredImageIds()).filter((x) => x !== id);
-      chrome.storage.local.set({ animeImages: newIds }, renderPreviews);
-      showMessage('Image removed.');
-    };
-    previewRow.appendChild(div);
-  }
-}
-
-/**
- * Get stored image IDs from chrome.storage.local
- * @returns {Promise<number[]>} Array of image IDs
- */
-function getStoredImageIds() {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['animeImages'], (res) => {
-      resolve(res.animeImages || []);
-    });
-  });
-}
-
-/**
- * Handle file upload
- * Stores images as blobs in IndexedDB and saves IDs to chrome.storage.local
- */
-fileInput.addEventListener('change', async (e) => {
-  const files = Array.from(e.target.files).filter((f) =>
-    f.type.startsWith('image/')
-  );
-  
-  if (files.length === 0) {
-    showMessage('Please select valid image files.');
-    return;
-  }
-
-  try {
-    await KireiDB.init();
-    const storedIds = (await getStoredImageIds()) || [];
-
-    let addedCount = 0;
-    for (let file of files) {
-      try {
-        // Store the file blob directly in IndexedDB
-        const id = await KireiDB.saveImage(file);
-        storedIds.push(id);
-        addedCount++;
-      } catch (error) {
-        console.error('[KireiTab] Error saving image:', error);
-        showMessage(`Error saving ${file.name}`);
-      }
-    }
-
-    if (addedCount > 0) {
-      // Save image IDs to chrome.storage.local (only IDs, not the actual images)
-      chrome.storage.local.set({ animeImages: storedIds }, () => {
-        showMessage(`${addedCount} image(s) saved successfully!`);
-        fileInput.value = '';
-        renderPreviews();
-      });
-    }
-  } catch (error) {
-    console.error('[KireiTab] Error in file upload handler:', error);
-    showMessage('Error uploading images');
-  }
-});
-
-/**
- * Clear all uploaded images
- * Removes all images from IndexedDB and clears stored IDs
- */
-clearBtn.addEventListener('click', async () => {
-  if (!confirm('Remove all uploaded images? This cannot be undone.')) return;
-  
-  const storedIds = await getStoredImageIds();
-  
-  // Clean up all object URLs from preview thumbnails
-  const thumbs = previewRow.querySelectorAll('.thumb[data-object-url]');
-  thumbs.forEach(thumb => {
-    if (thumb.dataset.objectUrl) {
-      URL.revokeObjectURL(thumb.dataset.objectUrl);
-    }
 function showMessage(text, timeout = 2500) {
   msg.textContent = text;
   setTimeout(() => msg.textContent = '', timeout);
 }
 
 // Image Management Functions
+/**
+ * Renders the image previews.
+ * @param {Array<Object>} images - Combined list of default and uploaded image objects.
+ */
 function renderPreviews(images) {
+  // Revoke old object URLs before rendering new ones
+  objectUrlMap.forEach(url => URL.revokeObjectURL(url));
+  objectUrlMap.clear();
+
   previewRow.innerHTML = '';
-  images.forEach((imageObj, idx) => {
-    // Determine display URL and check if it's a default image
-    const displayUrl = imageObj.dataUrl || imageObj.path;
+  images.forEach(imageObj => {
     const isDefault = !!imageObj.path;
+    let displayUrl = '';
+    
+    // Determine the source for the preview
+    if (isDefault) {
+      displayUrl = imageObj.path;
+    } else if (imageObj.dataUrl) {
+      // Create Object URL from the dataUrl blob for preview
+      const blob = dataUrlToBlob(imageObj.dataUrl);
+      displayUrl = URL.createObjectURL(blob);
+      objectUrlMap.set(imageObj.id, displayUrl);
+    } else {
+      // This should not happen if loadAll is correct, but good for safety
+      return; 
+    }
 
     const d = document.createElement('div');
     d.className = 'thumb';
@@ -203,19 +74,7 @@ function renderPreviews(images) {
 
     // Only allow removing non-default (uploaded) images
     if (!isDefault) {
-      // Calculate the index in the actual stored array (skip the default images)
-      const storedIndex = idx - DEFAULT_IMAGES.length;
-      d.onclick = () => {
-        if (!confirm('Remove this image?')) return;
-        chrome.storage.local.get(['animeImages'], (res) => {
-          let current = res.animeImages || [];
-          current.splice(storedIndex, 1);
-          chrome.storage.local.set({ animeImages: current }, () => {
-            showMessage('Image removed.');
-            loadAll();
-          });
-        });
-      };
+      d.onclick = () => removeImage(imageObj.id);
     } else {
       d.style.cursor = 'default';
       d.style.opacity = '0.9';
@@ -225,8 +84,47 @@ function renderPreviews(images) {
   });
 }
 
-function loadAll() {
-  chrome.storage.local.get(['settings', 'animeImages', 'quickLinks'], (res) => {
+/**
+ * Utility to convert Data URL to Blob for temporary Object URL creation.
+ * @param {string} dataurl - The base64 data URL.
+ * @returns {Blob} The created Blob.
+ */
+function dataUrlToBlob(dataurl) {
+    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
+
+
+/**
+ * Fetches the list of image IDs and a small preview dataUrl for rendering.
+ * @returns {Promise<Array<Object>>} A promise resolving to the combined image list.
+ */
+async function getCombinedImages() {
+  const ids = await chrome.storage.local.get('uploadedImageIDs').then(res => res.uploadedImageIDs || []);
+  uploadedImageIDs = ids; // Update local tracker
+
+  // The stored object now contains {id: number, previewDataUrl: string}
+  const uploadedPreviews = ids.map(item => ({
+    id: item.id,
+    dataUrl: item.previewDataUrl,
+    name: `Uploaded ${item.id}` // Use ID for name
+  }));
+  
+  return [...DEFAULT_IMAGES, ...uploadedPreviews];
+}
+
+async function loadAll() {
+  try {
+    const res = await new Promise(resolve => {
+      chrome.storage.local.get(['settings', 'quickLinks'], resolve);
+    });
+
     // Load Settings
     if (res.settings) {
       rotateInput.value = res.settings.rotateInterval || 0;
@@ -244,9 +142,8 @@ function loadAll() {
       }
     }
 
-    // Load Images: Combine defaults with user-uploaded images
-    const storedImages = res.animeImages || [];
-    const combinedImages = [...DEFAULT_IMAGES, ...storedImages];
+    // Load Images: Get the combined list
+    const combinedImages = await getCombinedImages();
     renderPreviews(combinedImages);
 
     // Load Quick Links
@@ -256,59 +153,112 @@ function loadAll() {
       { name: "YouTube", url: "https://youtube.com" }
     ];
     renderLinks();
+  } catch(e) {
+    console.error('Error in loadAll:', e);
+    showMessage('Error loading settings or images.', 5000);
+  }
+}
+
+// NEW: Updated Upload Logic
+fileInput.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+  if (files.length === 0) return;
+
+  showMessage(`Uploading ${files.length} images... Please wait.`);
+
+  // Read files as ArrayBuffer (for DB storage) AND DataURL (for preview thumbnail)
+  const readers = files.map(f => new Promise((res, rej) => {
+    const readerArrayBuffer = new FileReader();
+    const readerDataUrl = new FileReader();
+    
+    // Read as ArrayBuffer for IndexedDB storage (more efficient than Blob URL)
+    readerArrayBuffer.onload = (eArray) => {
+      // Read as DataURL for a small preview thumbnail to store in storage.local
+      readerDataUrl.onload = (eData) => {
+        res({ arrayBuffer: eArray.target.result, dataUrl: eData.target.result });
+      };
+      readerDataUrl.onerror = rej;
+      readerDataUrl.readAsDataURL(f); // Read second time for preview
+    };
+    readerArrayBuffer.onerror = rej;
+    readerArrayBuffer.readAsArrayBuffer(f); // Read first time for DB
+  }));
+
+  Promise.all(readers).then(async results => {
+    // Save each image to IndexedDB
+    const newImagePromises = results.map(async ({ arrayBuffer, dataUrl }) => {
+      const blob = new Blob([arrayBuffer], { type: 'image/jpeg' }); // Use a generic image MIME type or the original file type
+      const id = await saveImageBlob(blob);
+      // Store only the ID and a small preview dataUrl in chrome.storage.local
+      return { id, previewDataUrl: dataUrl };
+    });
+
+    const newImageItems = await Promise.all(newImagePromises);
+
+    // Update chrome.storage.local with the new IDs and previews
+    const res = await new Promise(resolve => chrome.storage.local.get('uploadedImageIDs', resolve));
+    let currentIds = res.uploadedImageIDs || [];
+    
+    const combinedIds = currentIds.concat(newImageItems).slice(0, 50); // Keep up to 50 images
+    await new Promise(resolve => chrome.storage.local.set({ uploadedImageIDs: combinedIds }, resolve));
+
+    showMessage('Images uploaded and saved!');
+    fileInput.value = '';
+    loadAll();
+
+  }).catch(e => {
+    console.error(e);
+    showMessage('Error reading or saving files to IndexedDB.', 5000);
   });
-  
-  // Delete all images from IndexedDB
-  for (let id of storedIds) {
-    await KireiDB.deleteImage(id);
+});
+
+// NEW: Updated Remove Image Logic
+async function removeImage(id) {
+  if (!confirm('Remove this image?')) return;
+  try {
+    // 1. Delete from IndexedDB
+    await deleteImage(id);
+
+    // 2. Delete the record from chrome.storage.local
+    const res = await new Promise(resolve => chrome.storage.local.get('uploadedImageIDs', resolve));
+    let currentIds = res.uploadedImageIDs || [];
+    const newIds = currentIds.filter(item => item.id !== id);
+    await new Promise(resolve => chrome.storage.local.set({ uploadedImageIDs: newIds }, resolve));
+
+    showMessage('Image removed.');
+    loadAll();
+  } catch (e) {
+    console.error('Error removing image:', e);
+    showMessage('Error removing image.', 5000);
   }
-  
-  // Clear IDs from chrome.storage.local
-  chrome.storage.local.set({ animeImages: [] }, renderPreviews);
-  showMessage('All uploaded images cleared.');
-});
+}
 
-/**
- * Save system settings to chrome.storage.local
- */
-saveBtn.addEventListener('click', () => {
-  const newSettings = {
-    rotateInterval: Number(rotateInput.value) || 0,
-    randomize: !!randomizeCheckbox.checked,
-    blur: Number(blurInput.value) || 0,
-    overlayOpacity: Number(overlayInput.value) || 0.35,
-    timeFormat: timeFormat12h.checked ? '12h' : '24h'
-  };
-  chrome.storage.local.set({ settings: newSettings }, () =>
-    showMessage('Settings saved!')
-  );
-});
+// NEW: Updated Clear All Logic
+clearBtn.addEventListener('click', async () => {
+  if (!confirm('Remove all uploaded images? Default images will remain.')) return;
+  try {
+    // 1. Clear IndexedDB store
+    await clearAllImages();
 
-/**
- * Real-time update of slider values
- */
-blurInput.addEventListener('input', (e) => (blurVal.textContent = e.target.value));
-overlayInput.addEventListener('input', (e) => (overlayVal.textContent = e.target.value));
+    // 2. Clear the IDs list from chrome.storage.local
+    await new Promise(resolve => chrome.storage.local.remove(['uploadedImageIDs'], resolve));
 
-/**
- * Quick link management - Add new link
- */
-addLinkBtn.addEventListener('click', addLink);
-newLinkUrl.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    addLink();
+    showMessage('Cleared uploaded images.');
+    loadAll();
+  } catch (e) {
+    console.error('Error clearing images:', e);
+    showMessage('Error clearing images.', 5000);
   }
 });
 
-/**
- * Render quick links list
- */
+
+// ... (rest of the functions remain the same) ...
+
+// NEW FUNCTION: Render Quick Links
 function renderLinks() {
   linksList.innerHTML = '';
   if (quickLinks.length === 0) {
-    linksList.innerHTML =
-      '<div style="justify-content:center;color:var(--muted);opacity:0.6;padding:10px 15px;">No quick links added yet.</div>';
+    linksList.innerHTML = '<div style="justify-content:center;color:var(--muted);opacity:0.6;padding:10px 15px;">No quick links added yet.</div>';
     return;
   }
 
@@ -316,24 +266,17 @@ function renderLinks() {
     const div = document.createElement('div');
     div.innerHTML = `
       <span>${link.name} (<a href="${link.url}" target="_blank" style="color:var(--muted);text-decoration:none;">${link.url.substring(0, 30)}...</a>)</span>
-      <button data-index="${index}">×</button>
+      <button data-index="${index}">❌</button>
     `;
-    div.querySelector('button').onclick = () => removeLink(index);
+    div.querySelector('button').onclick = (e) => removeLink(index);
     linksList.appendChild(div);
   });
 }
 
-/**
- * Add new quick link
- */
+// NEW FUNCTION: Add Quick Link
 function addLink() {
   const name = newLinkName.value.trim();
   let url = newLinkUrl.value.trim();
-  if (!name || !url) return showMessage('Link Name and URL required!');
-  
-  // Auto-prepend https:// if missing
-  if (!url.startsWith('http')) url = 'https://' + url;
-  if (!url.includes('.')) return showMessage('Enter valid URL');
 
   if (!name || !url) {
     showMessage('Link Name and URL cannot be empty!');
@@ -350,108 +293,27 @@ function addLink() {
     return;
   }
 
-  quickLinks.push({ name, url });
-  chrome.storage.local.set({ quickLinks }, () => {
-    showMessage('Link added!');
+  quickLinks.push({ name: name, url: url });
+  chrome.storage.local.set({ quickLinks: quickLinks }, () => {
+    showMessage('Link added successfully!');
     renderLinks();
     newLinkName.value = '';
     newLinkUrl.value = '';
   });
 }
 
-/**
- * Remove quick link by index
- */
+// NEW FUNCTION: Remove Quick Link
 function removeLink(index) {
-  if (!confirm(`Remove "${quickLinks[index].name}"?`)) return;
+  if (!confirm(`Are you sure you want to remove "${quickLinks[index].name}"?`)) return;
   quickLinks.splice(index, 1);
-  chrome.storage.local.set({ quickLinks }, () => {
-    showMessage('Link removed.');
+  chrome.storage.local.set({ quickLinks: quickLinks }, () => {
+    showMessage('Link removed!');
     renderLinks();
   });
 }
 
-/**
- * Load all saved settings and links from chrome.storage.local
- */
-async function loadAll() {
-  await KireiDB.init();
-  
-  chrome.storage.local.get(['settings', 'quickLinks'], (res) => {
-    // Load settings or use defaults
-    if (res.settings) {
-      rotateInput.value = res.settings.rotateInterval || 0;
-      randomizeCheckbox.checked = res.settings.randomize !== undefined ? res.settings.randomize : true;
-      blurInput.value = res.settings.blur || 0;
-      blurVal.textContent = res.settings.blur || 0;
-      overlayInput.value = res.settings.overlayOpacity || 0.35;
-      overlayVal.textContent = res.settings.overlayOpacity || 0.35;
-      if (res.settings.timeFormat === '12h') timeFormat12h.checked = true;
-      else timeFormat24h.checked = true;
-    } else {
-      // First time load - set randomize to checked by default
-      randomizeCheckbox.checked = true;
-    }
-
-    // Load quick links or use defaults
-    quickLinks =
-      res.quickLinks || [
-        { name: 'Google', url: 'https://google.com' },
-        { name: 'GitHub', url: 'https://github.com' },
-        { name: 'YouTube', url: 'https://youtube.com' }
-      ];
-    renderLinks();
-    renderPreviews();
-  });
-}
-
-/**
- * Cleanup object URLs on page unload to prevent memory leaks
- */
-window.addEventListener('beforeunload', () => {
-  const thumbs = previewRow.querySelectorAll('.thumb[data-object-url]');
-  thumbs.forEach(thumb => {
-    if (thumb.dataset.objectUrl) {
-      URL.revokeObjectURL(thumb.dataset.objectUrl);
-    }
-  });
 
 // Event Listeners
-fileInput.addEventListener('change', (e) => {
-  const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
-  if (files.length === 0) return;
-
-  const readers = files.map(f => new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = rej;
-    r.readAsDataURL(f);
-  }));
-
-  Promise.all(readers).then(results => {
-    // combine with existing
-    chrome.storage.local.get(['animeImages'], (res) => {
-      const current = res.animeImages || [];
-      // Uploaded images are stored as { dataUrl: <base64> }
-      const newImages = results.map(dataUrl => ({ dataUrl }));
-      const combined = current.concat(newImages).slice(0, 50); // keep up to 50 images
-      chrome.storage.local.set({ animeImages: combined }, () => {
-        showMessage('Images uploaded and saved!');
-        fileInput.value = '';
-        loadAll();
-      });
-    });
-  }).catch(e => {
-    console.error(e);
-    showMessage('Error reading files');
-  });
-});
-
-clearBtn.addEventListener('click', () => {
-  if (!confirm('Remove all uploaded images? Default images will remain.')) return;
-  // Only remove the uploaded images, keep the default ones.
-  chrome.storage.local.remove(['animeImages'], () => { showMessage('Cleared uploaded images.'); loadAll(); });
-});
 
 saveBtn.addEventListener('click', () => {
   const newSettings = {
@@ -479,5 +341,6 @@ newLinkUrl.addEventListener('keydown', (e) => {
   }
 });
 
-// Initialize on page load
+
+// Initialize
 loadAll();
