@@ -1,36 +1,34 @@
 :root{
   --glass-bg: rgba(255,255,255,0.06);
-  --card-bg: rgba(255,255,255,0.08); /* Thoda zyada solid */
-  --accent: rgba(255,255,255,0.95); /* Zyada bright */
+  --card-bg: rgba(255,255,255,0.08);
+  --accent: rgba(255,255,255,0.95);
   --muted: rgba(255,255,255,0.7);
-  --overlay-color: rgba(7,10,25,0.45); /* Thoda zyada dark */
-  --radius: 16px; /* Thoda zyada round */
+  --overlay-color: rgba(7,10,25,0.45);
+  --radius: 16px;
   --max-width: 980px;
-  --transition-duration: 0.25s; /* Smooth transitions ke liye */
+  --transition-duration: 0.25s;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Reset */
+
 *{box-sizing:border-box;margin:0;padding:0}
-/* newtab.html ke liye height 100% rakhenge */
+
 html,body{height:100%} 
 
-/* Only #bg and .overlay need to be fixed for newtab */
+
 #bg{height:100%} 
 
 body{
   min-height:100vh;
   color:var(--accent);
   background: #0b0f1a;
-  /* NEWTAB mein 'overflow: hidden' lagana zaroori hai, lekin options.html ke liye yeh CSS kaam nahi karega
-     kyunki options.html chrome_url_overrides ke through load nahi hota. Isliye, hum sirf newtab ke body mein hi hidden rakhte hain.
-     Filhaal, hum isse hata dete hain taaki options page scroll ho sake. */
-  /* Remove overflow:hidden; */
+ 
+ 
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
 
-/* Background image container */
+
 .bg{
   position:fixed; inset:0;
   background-position:center;
@@ -45,7 +43,7 @@ body{
   transition: background-color var(--transition-duration) ease;
 }
 
-/* Main Layout (Only for newtab.html) */
+
 .container{
   max-width:var(--max-width);
   margin:0 auto;
@@ -70,7 +68,7 @@ body{
   text-align:left;
 }
 
-/* Clock & Greeting */
+
 .clock{
   font-size:7rem; 
   font-weight:700;
@@ -84,7 +82,7 @@ body{
   line-height:1;
 }
 
-/* Options Button */
+
 .icon-btn{
   font-size:24px;
   text-decoration:none;
@@ -94,13 +92,13 @@ body{
 }
 .icon-btn:hover{opacity:1;}
 
-/* Search and Quick Links Card */
+
 .search-card{
   width:100%;
   padding:24px 28px;
   background:var(--card-bg);
   border-radius:var(--radius);
-  /* Modern Glassmorphism effect */
+ 
   backdrop-filter: blur(12px); 
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.1); 
@@ -143,7 +141,7 @@ body{
   background: rgba(255,255,255,0.2);
 }
 
-/* Quick links */
+
 .quick-links{
   margin-top:16px;
   display:flex; gap:12px; flex-wrap:wrap;
@@ -163,7 +161,7 @@ body{
   color:var(--accent);
 }
 
-/* Quote */
+
 .quote-card{
   margin-top:20px;
   text-align:center;
@@ -176,7 +174,7 @@ body{
   opacity:0.8;
 }
 
-/* Media Queries for smaller screens (Newtab) */
+
 @media (max-width: 600px) {
   .clock{
     font-size:5rem;
@@ -202,7 +200,7 @@ body{
   }
 }
 
-/* --- Options Page Styles (FIXED/IMPROVED) --- */
+
 .options-wrap{
   max-width:900px;
   margin:28px auto;
@@ -218,10 +216,10 @@ body{
   gap: 20px; 
 }
 
-/* NEW: Agar screen choti ho toh options-wrap mein margin kam ho jaye */
+
 @media (max-width: 950px) {
   .options-wrap {
-    /* Auto margin for horizontal centering, 20px for vertical/top/bottom space */
+   
     margin: 20px auto; 
     padding: 20px;
   }
@@ -249,12 +247,12 @@ label{
 }
 .btn:hover{background:rgba(255,255,255,0.2);}
 
-/* Form Inputs */
+
 input[type=number], input[type=range]{width:100%;}
 input[type=text], input[type=url]{
   padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.15);color:var(--accent);width:100%;
 }
-/* File Input Styling (for visibility) */
+
 input[type=file]{
     padding: 10px; 
     border: 1px solid rgba(255,255,255,0.25); 
@@ -265,7 +263,7 @@ input[type=file]{
     cursor: pointer;
     margin-top: 5px;
 }
-/* Styling the native Choose File button */
+
 input[type=file]::-webkit-file-upload-button,
 input[type=file]::file-selector-button {
   background: rgba(255,255,255,0.15); 
@@ -278,18 +276,18 @@ input[type=file]::file-selector-button {
 
 .radio-group{display:flex;gap:20px;}
 .radio-group label{display:inline;margin:0;}
-.separator{margin:20px 0;border:none;height:1px;background:rgba(255,255,255,0.1);} /* Separator */
+.separator{margin:20px 0;border:none;height:1px;background:rgba(255,255,255,0.1);}
 
-/* Options Message Box */
+
 .message-box {
     text-align: center;
-    color: #8fbc8f; /* Light green for success/info */
+    color: #8fbc8f;
     font-weight: 600;
     margin-bottom: 5px;
-    height: 1.5em; /* Reserve space */
+    height: 1.5em;
 }
 
-/* Links List */
+
 .links-list{
     display:flex;flex-direction:column;gap:8px;
 }
@@ -302,7 +300,7 @@ input[type=file]::file-selector-button {
 .links-list button:hover{opacity:1;color:red;}
 .add-link-form{display:flex;gap:10px;}
 
-/* Thumbnails */
+
 .thumbs{
   display:flex; gap:12px; flex-wrap:wrap; align-items:center;
 }
