@@ -269,10 +269,6 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
-
-
-// newtab.js - Existing code ke baad yeh add karein
-
 // Apps and Todos functionality
 const appsModal = document.getElementById('appsModal');
 const todosModal = document.getElementById('todosModal');
@@ -447,6 +443,5 @@ newTodoInput.addEventListener('keypress', (event) => {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', function() {
-    // ... existing code ...
     loadTodos(); // Preload todos
 });
