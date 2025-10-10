@@ -252,8 +252,6 @@ clearBtn.addEventListener('click', async () => {
 });
 
 
-// ... (rest of the functions remain the same) ...
-
 // NEW FUNCTION: Render Quick Links
 function renderLinks() {
   linksList.innerHTML = '';
