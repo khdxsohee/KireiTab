@@ -82,7 +82,7 @@ All settings are managed through the **Options Page**, accessible via the gear i
 
 -----
 
-## 🤝 Contributing
+## 🤝 Contributing 
 
 We welcome contributions\! If you have suggestions for a feature, design improvements, or bug fixes, please follow these steps:
 
