@@ -11,7 +11,7 @@
 [](https://github.com/khdxsohee/KireiTab)
 [](https://github.com/khdxsohee/KireiTab)
 
-## ✨ Features 
+## ✨ Features  
 
 KireiTab is designed for speed, style, and personalization.
 
