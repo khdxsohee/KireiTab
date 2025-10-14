@@ -1,3 +1,4 @@
+![Version](https://img.shields.io/badge/version-v1.1.0-blue.svg)
 [![GitHub license](https://img.shields.io/github/license/khdxsohee/KireiTab?style=flat-square&color=blue)](https://github.com/khdxsohee/KireiTab/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/khdxsohee/KireiTab?style=flat-square&color=red)](https://github.com/khdxsohee/KireiTab/issues)
 [![GitHub forks](https://img.shields.io/github/forks/khdxsohee/KireiTab?style=flat-square&color=teal)](https://github.com/khdxsohee/KireiTab/network)
