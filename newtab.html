@@ -1,10 +1,18 @@
+<!--
+ ===================================================================
+ * PROJECT: KireiTab
+ * VERSION: v1.2.0 - Major Feature Update UI
+ * DATE: 2025-10-21
+ * AUTHOR: khdxsohee
+ * ===================================================================
+ -->
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>New Tab</title>
+  <title>KireiTab</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
@@ -20,16 +28,12 @@
 
   <main class="container">
     <header class="top-row">
-      <div class="left">
         <div class="weather-placeholder">
             <span class="icon" id="weatherIcon">☁️</span>
             <span class="temp" id="weatherTemp">--°C</span>
             <div class="location" id="weatherLocation">Click to enable</div>
         </div>
-      </div>
-      <div class="right">
-        </div>
-    </header>
+        </header>
 
     <section class="main-content">
       <form id="searchForm" class="search-form" autocomplete="off">
@@ -46,13 +50,16 @@
 
 <footer class="bottom-bar">
     <a class="bottom-link" id="open-options" title="Settings">
-        <span class="icon">⚙️</span> Settings
+        <img src="icons/settings.png" class="icon-img" alt="Settings Icon">
+        Settings
     </a>
     <a class="bottom-link" id="open-apps" title="Apps">
-        <span class="icon">📱</span> Apps
+        <img src="icons/app.png" class="icon-img" alt="Apps Icon">
+        Apps
     </a>
     <a class="bottom-link" id="open-todos" title="Todos">
-        <span class="icon">✅</span> Todos
+        <img src="icons/to-do-list.png" class="icon-img" alt="Todos Icon">
+        Todos
     </a>
 </footer>
 
