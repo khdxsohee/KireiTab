@@ -62,6 +62,7 @@ Since KireiTab is not yet published on the Chrome Web Store, you can install it 
 5.  **You're Done\!**
 
       * Open a new tab to see **KireiTab** in action.
+      * Disable footer by **right** clicking on it, and select hide footer in chrome.
       * Click the **⚙️ (gear icon)** in the top-right to access the customization settings.
 
 -----
