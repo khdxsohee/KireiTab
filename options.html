@@ -1,3 +1,12 @@
+<!--
+ ===================================================================
+ * PROJECT: KireiTab
+ * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * DATE: 2025-10-22
+ * AUTHOR: khdxsohee
+ * ===================================================================
+-->
+
 <!doctype html>
 <html lang="en">
 
@@ -19,10 +28,10 @@
       **Default Images:** 1.jpg, 2.jpg, 3.jpg must be in the **images folder** in your extension's root directory. You
       can remove the uploaded images below.
     </div>
-    <div>
+  <div>
       <label>Upload custom background images (recommended HD JPG/PNG)</label>
-      <input id="fileInput" type="file" accept="image/*" multiple />
-      <div class="small">You can upload multiple images. They will be saved locally to your browser storage.</div>
+      <input id="fileInput" type="file" accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, image/svg+xml" multiple />
+      <div class="small">You can upload multiple images. Supported types: JPG, PNG, JPEG, WebP, GIF, SVG. They will be saved locally to your browser storage.</div>
     </div>
 
     <div style="margin-top:5px">
@@ -49,7 +58,7 @@
     </div>
 
     <div>
-      <label><input id="randomizeCheckbox" type="checkbox" /> Randomize first background image on load</label>
+      <label><input id="randomizeCheckbox" type="checkbox" checked /> Randomize first background image on load</label>
     </div>
 
     <div>

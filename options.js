@@ -1,4 +1,12 @@
-// options.js
+/*
+ ===================================================================
+ * PROJECT: KireiTab
+ * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * DATE: 2025-10-22
+ * AUTHOR: khdxsohee
+ * ===================================================================
+*/
+
 const fileInput = document.getElementById('fileInput');
 const clearBtn = document.getElementById('clearBtn');
 const previewRow = document.getElementById('previewRow');
@@ -35,8 +43,19 @@ const objectUrlMap = new Map();
 
 
 function showMessage(text, timeout = 2500) {
+  const msg = document.getElementById('msg');
   msg.textContent = text;
-  setTimeout(() => msg.textContent = '', timeout);
+  msg.style.display = 'block';
+  msg.style.animation = 'slideUp 0.3s ease-out';
+  
+  // Hide after timeout with fade out animation
+  setTimeout(() => {
+    msg.style.animation = 'fadeOutDown 0.3s ease-out';
+    setTimeout(() => {
+      msg.style.display = 'none';
+      msg.textContent = '';
+    }, 300); // Match the animation duration
+  }, timeout);
 }
 
 // Image Management Functions
