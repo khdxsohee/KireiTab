@@ -1,4 +1,12 @@
-// db.js
+/*
+ ===================================================================
+ * PROJECT: KireiTab
+ * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * DATE: 2025-10-22
+ * AUTHOR: khdxsohee
+ * ===================================================================
+*/
+
 const DB_NAME = 'KireiDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'imagesStore';
