@@ -42,11 +42,11 @@ function formatTime(d) {
     // 12-hour format conversion
     hh = hh % 12;
     hh = hh ? hh : 12; // 0 o'clock (midnight) should be 12
-    return `${hh}:${mm}`; // Ab sirf time return hoga (e.g., 2:30)
+    return `${hh}:${mm}`;
   } else {
     // 24-hour format
     hh = String(hh).padStart(2, '0');
-    return `${hh}:${mm}`; // e.g., 14:30
+    return `${hh}:${mm}`;
   }
 }
 
@@ -56,10 +56,9 @@ function updateClock() {
   if (clockEl) {
     let timeHTML = formatTime(now);
     
-    // AM/PM ko alag se span mein shamil karein agar 12h format ho
     if (settings.timeFormat === '12h') {
       const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-      // span.ampm CSS file mein style kiya jaa sakta hai
+      
       timeHTML += `<span class="ampm">${ampm}</span>`;
     }
     
@@ -71,7 +70,7 @@ function updateClock() {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
     const weekday = now.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-    // Changed to DD.MM.YYYY format like in screenshot
+ 
     dateEl.textContent = `${day}.${month}.${year} ${weekday}`;
   }
 }
