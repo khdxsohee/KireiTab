@@ -1,8 +1,8 @@
 <!--
  ===================================================================
  * PROJECT: KireiTab
- * VERSION: v1.2.0 - Major Feature Update UI
- * DATE: 2025-10-21
+ * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * DATE: 2025-10-22
  * AUTHOR: khdxsohee
  * ===================================================================
  -->
@@ -37,15 +37,16 @@
 
     <section class="main-content">
       <form id="searchForm" class="search-form" autocomplete="off">
-        <div class="search-icon">🔍</div>
+        <div class="search-icon">🔍︎</div>
         <input id="searchInput" class="search-input" name="q" type="search"
           placeholder="Search" />
       </form>
 
-      <div class="center-time">
-        <div id="clock" class="clock">00:00</div>
-        <div id="date-display" class="date-display">00.00.0000 THU</div>
-      </div>
+    
+<div class="center-time">
+  <div id="clock" class="clock"><span class="ampm"></span></div>
+  <div id="date-display" class="date-display"></div>
+</div>
     </section>
 
 <footer class="bottom-bar">

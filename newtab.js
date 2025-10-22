@@ -1,4 +1,12 @@
-// newtab.js
+/*
+ ===================================================================
+ * PROJECT: KireiTab
+ * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * DATE: 2025-10-22
+ * AUTHOR: khdxsohee
+ * ===================================================================
+*/
+
 const bgEl = document.getElementById('bg');
 const overlayEl = document.getElementById('overlay');
 const clockEl = document.getElementById('clock');
@@ -24,20 +32,21 @@ let images = [];
 let rotateTimer = null;
 let currentObjectURL = null;
 
-// Time display logic
+// Time display logic - Fixed AM/PM
+
 function formatTime(d) {
   let hh = d.getHours();
   const mm = String(d.getMinutes()).padStart(2, '0');
-  let ampm = '';
-
+  
   if (settings.timeFormat === '12h') {
-    ampm = hh >= 12 ? ' PM' : ' AM';
+    // 12-hour format conversion
     hh = hh % 12;
-    hh = hh ? hh : 12;
-    return `${hh}:${mm}${ampm}`;
+    hh = hh ? hh : 12; // 0 o'clock (midnight) should be 12
+    return `${hh}:${mm}`; // Ab sirf time return hoga (e.g., 2:30)
   } else {
+    // 24-hour format
     hh = String(hh).padStart(2, '0');
-    return `${hh}:${mm}`;
+    return `${hh}:${mm}`; // e.g., 14:30
   }
 }
 
@@ -45,7 +54,16 @@ function updateClock() {
   const now = new Date();
   
   if (clockEl) {
-    clockEl.textContent = formatTime(now);
+    let timeHTML = formatTime(now);
+    
+    // AM/PM ko alag se span mein shamil karein agar 12h format ho
+    if (settings.timeFormat === '12h') {
+      const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+      // span.ampm CSS file mein style kiya jaa sakta hai
+      timeHTML += `<span class="ampm">${ampm}</span>`;
+    }
+    
+    clockEl.innerHTML = timeHTML;
   }
   
   if (dateEl) {
@@ -53,6 +71,7 @@ function updateClock() {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
     const weekday = now.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+    // Changed to DD.MM.YYYY format like in screenshot
     dateEl.textContent = `${day}.${month}.${year} ${weekday}`;
   }
 }
@@ -170,48 +189,54 @@ function applySettings() {
     }, settings.rotateInterval * 1000);
   }
 
+  // Update clock with new settings
   updateClock();
 }
 
 async function loadFromStorage() {
-  const res = await new Promise(resolve => {
-    chrome.storage.local.get(['settings', 'uploadedImageIDs', 'quickLinks'], resolve);
-  });
+  try {
+    const res = await new Promise(resolve => {
+      chrome.storage.local.get(['settings', 'uploadedImageIDs', 'quickLinks'], resolve);
+    });
 
-  // Load settings
-  if (res.settings) {
-    settings = { ...settings, ...res.settings };
-  }
-
-  // Load images
-  const storedImageIDs = res.uploadedImageIDs || [];
-  const uploadedImages = storedImageIDs.map(item => ({
-    id: item.id,
-    name: `Uploaded ${item.id}`
-  }));
-
-  images = [...DEFAULT_IMAGES, ...uploadedImages];
-
-  if (images.length > 0) {
-    let startIdx = 0;
-    if (settings.randomize) {
-      startIdx = Math.floor(Math.random() * images.length);
+    // Load settings - PROPERLY MERGE SETTINGS
+    if (res.settings) {
+      Object.assign(settings, res.settings);
     }
-    await setBackground(images[startIdx]);
-  } else {
-    await setBackground(DEFAULT_IMAGES[0]);
+
+    // Load images
+    const storedImageIDs = res.uploadedImageIDs || [];
+    const uploadedImages = storedImageIDs.map(item => ({
+      id: item.id,
+      name: `Uploaded ${item.id}`
+    }));
+
+    images = [...DEFAULT_IMAGES, ...uploadedImages];
+
+    if (images.length > 0) {
+      let startIdx = 0;
+      if (settings.randomize) {
+        startIdx = Math.floor(Math.random() * images.length);
+      }
+      await setBackground(images[startIdx]);
+    } else {
+      await setBackground(DEFAULT_IMAGES[0]);
+    }
+
+    applySettings();
+
+    quickLinks = res.quickLinks || [
+      { name: "Google", url: "https://www.google.com" },
+      { name: "GitHub", url: "https://github.com" },
+      { name: "YouTube", url: "https://youtube.com" }
+    ];
+
+    // Load weather
+    updateWeather();
+    
+  } catch (error) {
+    console.error('Error loading from storage:', error);
   }
-
-  applySettings();
-
-  quickLinks = res.quickLinks || [
-    { name: "Google", url: "https://www.google.com" },
-    { name: "GitHub", url: "https://github.com" },
-    { name: "YouTube", url: "https://youtube.com" }
-  ];
-
-  // Load weather
-  updateWeather();
 }
 
 // Event Listeners
@@ -241,17 +266,22 @@ document.getElementById('open-options').addEventListener('click', () => {
 // Make weather clickable
 document.getElementById('weatherLocation').addEventListener('click', updateWeather);
 
-// Initialization
+// Initialization - FIXED
 document.addEventListener('DOMContentLoaded', function() {
-  updateClock(); // Immediate first update
+  // First show time immediately
+  updateClock();
+  
+  // Then load settings
   loadFromStorage();
-  setInterval(updateClock, 1000); // Regular updates
+  
+  // Start regular updates
+  setInterval(updateClock, 1000);
 });
 
 // React to settings updates live
 chrome.storage.onChanged.addListener((changes) => {
   if (changes.settings) {
-    settings = { ...settings, ...changes.settings.newValue };
+    Object.assign(settings, changes.settings.newValue);
     applySettings();
   }
   if (changes.uploadedImageIDs) {
@@ -441,7 +471,7 @@ newTodoInput.addEventListener('keypress', (event) => {
     }
 });
 
-// Initial load
+// Initial load todos
 document.addEventListener('DOMContentLoaded', function() {
-    loadTodos(); // Preload todos
+    loadTodos();
 });
