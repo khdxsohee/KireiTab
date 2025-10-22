@@ -130,12 +130,8 @@ body {
   width: 100%;
 }
 
-/* Clock Styles - New Design */
-/* Replace the clock and ampm styles in styles.css */
-
 .clock {
   display: flex;
-  /* align-items: flex-end; set karein takay dono bottom se align ho saken */
   align-items: flex-end; 
   font-size: 4rem; 
   font-weight: 400;
@@ -143,27 +139,21 @@ body {
   margin: 0;
   z-index: 100;
   letter-spacing: -1px;
-  /* align-items: baseline; ko hata kar flex-end use karein ya flex-end ko confirm karein */
   justify-content: center;
   gap: 8px;
 }
 .ampm {
-  /* Clock ke numbers jitna size: 5rem */
   font-size: 4rem; 
   font-weight: 400;
-  opacity: 1; /* Pura bright rakhein, agar woh numbers jitna hi dikhana hai */
+  opacity: 1; 
   color: var(--accent);
-  
-  /* Alignment: Time ke bottom se align karein */
   align-self: flex-end; 
-  
-  /* Yeh extra space hata dein */
   margin-top: 0; 
   margin-left: 10px;
 }
 
 .date-display {
-  font-size: 1.4rem; /* Smaller date */
+  font-size: 1.4rem; 
   font-weight: 400;
   color: var(--muted);
   line-height: 1;
@@ -173,15 +163,15 @@ body {
   opacity: 0.9;
 }
 
-/* Center time alignment */
+
 .center-time {
   text-align: center;
-  margin-top: 0; /* Reduced margin */
+  margin-top: 0; 
   z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px; /* Space between time and date */
+  gap: 5px; 
 }
 
 
@@ -191,19 +181,18 @@ body {
   display: none !important;
 }
 
-/* Search Form - Even More Transparent */
 .search-form {
   display: flex;
   align-items: center;
   width: 100%;
   max-width: 650px;
   padding: 18px 25px;
-  background: rgba(255, 255, 255, 0.03); /* Very transparent */
+  background: rgba(255, 255, 255, 0.03); 
   border-radius: 4px;
-  backdrop-filter: blur(1px); /* Minimal blur */
+  backdrop-filter: blur(1px); 
   -webkit-backdrop-filter: blur(4px);
-  border: 1.1px solid rgba(255, 255, 255, 0.473); /* Very light border */
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Very light shadow */
+  border: 1.1px solid rgba(255, 255, 255, 0.473); 
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); 
   margin-bottom: 20px;
 }
 
@@ -219,13 +208,13 @@ body {
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.8); /* Brighter placeholder */
+  color: rgba(255, 255, 255, 0.8); 
 }
 
 .search-icon {
   font-size: 24px;
   margin-right: 15px;
-  color: rgba(255, 255, 255, 0.9); /* Brighter icon */
+  color: rgba(255, 255, 255, 0.9); 
   filter: brightness(0) invert(1);
 }
 
@@ -233,7 +222,6 @@ body {
   display: none;
 }
 
-/* Bottom Bar*/
 .bottom-bar {
   position: fixed;
   bottom: 25px;
@@ -570,7 +558,7 @@ input[type=file]::file-selector-button:hover {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
   backdrop-filter: blur(10px) !important;
   animation: slideUp 0.3s ease-out !important;
-  display: none; /* Hidden by default */
+  display: none; 
 }
 
 @keyframes slideUp {
@@ -584,7 +572,6 @@ input[type=file]::file-selector-button:hover {
   }
 }
 
-/* Optional: Add fade out animation when hiding */
 @keyframes fadeOutDown {
   from {
     opacity: 1;
@@ -596,7 +583,6 @@ input[type=file]::file-selector-button:hover {
   }
 }
 
-/* Quick Links Management - Updated */
 .links-list {
   display: flex;
   flex-direction: column;
@@ -634,7 +620,7 @@ input[type=file]::file-selector-button:hover {
   word-break: break-word;
 }
 
-/* Delete Button Style */
+
 .links-list button {
   background: none;
   border: none;
