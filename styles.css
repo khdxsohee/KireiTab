@@ -1,7 +1,7 @@
 /*
  ===================================================================
  * PROJECT: KireiTab
- * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * VERSION: v1.2.2 - Major Styling Update & Bugs Fixed
  * DATE: 2025-10-22
  * AUTHOR: khdxsohee
  * ===================================================================
@@ -50,13 +50,6 @@ body {
   background-repeat: no-repeat;
   filter: brightness(0.9) blur(0px);
   transition: background-image 0.5s ease-in-out, filter 0.5s ease;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--overlay-color);
-  transition: background-color var(--transition-duration) ease;
 }
 
 .container {
@@ -133,7 +126,7 @@ body {
 .clock {
   display: flex;
   align-items: flex-end; 
-  font-size: 4rem; 
+  font-size: 72px; 
   font-weight: 400;
   line-height: 1;
   margin: 0;
@@ -143,7 +136,7 @@ body {
   gap: 8px;
 }
 .ampm {
-  font-size: 4rem; 
+  font-size: 72px; 
   font-weight: 400;
   opacity: 1; 
   color: var(--accent);
@@ -153,8 +146,8 @@ body {
 }
 
 .date-display {
-  font-size: 1.4rem; 
-  font-weight: 400;
+  font-size: 24px; 
+  font-weight: 300;
   color: var(--muted);
   line-height: 1;
   z-index: 100;
@@ -185,13 +178,13 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 650px;
+  max-width: 760px;
   padding: 18px 25px;
-  background: rgba(255, 255, 255, 0.03); 
-  border-radius: 4px;
-  backdrop-filter: blur(1px); 
+  background-color: rgba(255, 255, 255, .2); 
+  border-radius: 3px;
+  backdrop-filter: blur(0px); 
   -webkit-backdrop-filter: blur(4px);
-  border: 1.1px solid rgba(255, 255, 255, 0.473); 
+  border: 1.5px solid rgba(255, 255, 255, 0.473); 
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); 
   margin-bottom: 20px;
 }
