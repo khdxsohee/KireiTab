@@ -1,7 +1,7 @@
 /*
  ===================================================================
  * PROJECT: KireiTab
- * VERSION: v1.2.1 - Major Feature Update UI & Bugs Fixed
+ * VERSION: v1.2.3 - Major Feature Update UI & Bugs Fixed
  * DATE: 2025-10-22
  * AUTHOR: khdxsohee
  * ===================================================================
