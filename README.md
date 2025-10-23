@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/version-v1.2.1-blue.svg)
+![Version](https://img.shields.io/badge/version-v1.2.2-blue.svg)
 [![GitHub license](https://img.shields.io/github/license/khdxsohee/KireiTab?style=flat-square&color=blue)](https://github.com/khdxsohee/KireiTab/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/khdxsohee/KireiTab?style=flat-square&color=red)](https://github.com/khdxsohee/KireiTab/issues)
 [![GitHub forks](https://img.shields.io/github/forks/khdxsohee/KireiTab?style=flat-square&color=teal)](https://github.com/khdxsohee/KireiTab/network)
@@ -28,7 +28,9 @@ KireiTab is designed for speed, style, and personalization.
 | **⚙️ Usability** | **Randomized Start** | Option to load a different background every time a new tab opens. |
 | | **Fast Search Focus** | Hit the **`/` key** anywhere on the page to instantly focus the search bar. |
 | | **Private & Local Storage** | All settings, quick links, and custom images are stored locally in your browser's IndexedDB and Chrome Storage, ensuring full privacy and speed.. |
-<img width="1366" height="768" alt="KireiTab (2)" src="https://github.com/user-attachments/assets/52e5d27d-e5e9-4716-8f39-994797b2a430" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/97fe1a89-2585-4e86-8c0c-b5c587293688" />
+
+
 
 
 
