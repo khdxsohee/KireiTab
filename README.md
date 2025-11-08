@@ -96,7 +96,6 @@ We welcome contributions\! If you have suggestions for a feature, design improve
 4.  Push to the branch (`git push origin feature/new-feature-name`).
 5.  Open a **Pull Request**.
 
--
 
 
 ## 💻 Tech Stack
