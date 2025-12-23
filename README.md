@@ -20,6 +20,7 @@ KireiTab is designed for speed, style, and personalization.
 | :--- | :--- | :--- |
 | **🖼️ Visuals** | **Custom HD Backgrounds** | Easily **upload your own** high-resolution anime images. |
 | | **Image Rotation** | Set a time interval to **automatically cycle** through your stored backgrounds. |
+| | **📜 Dynamic Anime Quotes (New!)** | New Feature: Added dynamic Anime Quotes with async loading and a flicker-free UI for a smoother experience. |
 | | **Visual FX Controls** | Adjust **blur** and **overlay darkness** to ensure text is always readable over your favorite images. |
 | **⌚ Utilities** | **Customizable Clock** | Choose between **12-hour (AM/PM)** or **24-hour** time format. |
 | | **Quick Links Management** | Add, edit, and remove your essential URLs (e.g., GitHub, YouTube, Reddit) directly from the options page. |
@@ -28,11 +29,12 @@ KireiTab is designed for speed, style, and personalization.
 | **⚙️ Usability** | **Randomized Start** | Option to load a different background every time a new tab opens. |
 | | **Fast Search Focus** | Hit the **`/` key** anywhere on the page to instantly focus the search bar. |
 | | **Private & Local Storage** | All settings, quick links, and custom images are stored locally in your browser's IndexedDB and Chrome Storage, ensuring full privacy and speed.. |
+
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/97fe1a89-2585-4e86-8c0c-b5c587293688" />
 
 
 
-
+Personalization
 
 ## 🚀 Installation
 
