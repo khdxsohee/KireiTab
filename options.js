@@ -4,6 +4,9 @@
  * VERSION: v1.2.3 - Major Feature Update UI & Bugs Fixed
  * DATE: 2025-10-22
  * AUTHOR: khdxsohee
+ * DESCRIPTION: A Browser extension new tab page with customizable backgrounds,
+ *              clock, weather, todo list, and more.
+ * LICENSE: MIT
  * ===================================================================
 */
 
@@ -20,14 +23,14 @@ const blurVal = document.getElementById('blurVal');
 const overlayInput = document.getElementById('overlayInput');
 const overlayVal = document.getElementById('overlayVal');
 
-// CORRECTED: Default images list points to the 'images' folder
+// Default images list points to the 'images' folder
 const DEFAULT_IMAGES = [
   { path: 'images/1.jpg', name: 'Default 1' },
   { path: 'images/2.jpg', name: 'Default 2' },
   { path: 'images/3.jpg', name: 'Default 3' }
 ];
 
-// NEW ELEMENTS
+// Additional UI elements for time format and quick links
 const timeFormat24h = document.getElementById('timeFormat24h');
 const timeFormat12h = document.getElementById('timeFormat12h');
 const linksList = document.getElementById('linksList');
@@ -35,10 +38,10 @@ const newLinkName = document.getElementById('newLinkName');
 const newLinkUrl = document.getElementById('newLinkUrl');
 const addLinkBtn = document.getElementById('addLinkBtn');
 
-let quickLinks = []; // Local array to hold links
+let quickLinks = []; // Local array to hold quick links
 
 let uploadedImageIDs = [];
-// This map will store Object URLs for uploaded images for preview only
+// This map stores Object URLs for uploaded images for preview purposes only
 const objectUrlMap = new Map();
 
 
@@ -48,7 +51,7 @@ function showMessage(text, timeout = 2500) {
   msg.style.display = 'block';
   msg.style.animation = 'slideUp 0.3s ease-out';
   
-  // Hide after timeout with fade out animation
+  // Hide message after timeout with fade out animation
   setTimeout(() => {
     msg.style.animation = 'fadeOutDown 0.3s ease-out';
     setTimeout(() => {
@@ -64,7 +67,7 @@ function showMessage(text, timeout = 2500) {
  * @param {Array<Object>} images - Combined list of default and uploaded image objects.
  */
 function renderPreviews(images) {
-  // Revoke old object URLs before rendering new ones
+  // Revoke old object URLs before rendering new ones to prevent memory leaks
   objectUrlMap.forEach(url => URL.revokeObjectURL(url));
   objectUrlMap.clear();
 
@@ -82,7 +85,7 @@ function renderPreviews(images) {
       displayUrl = URL.createObjectURL(blob);
       objectUrlMap.set(imageObj.id, displayUrl);
     } else {
-      // This should not happen if loadAll is correct, but good for safety
+      // This should not happen if loadAll is correct, but included for safety
       return; 
     }
 
@@ -178,7 +181,7 @@ async function loadAll() {
   }
 }
 
-// NEW: Updated Upload Logic
+// Updated Upload Logic
 fileInput.addEventListener('change', (e) => {
   const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
   if (files.length === 0) return;
@@ -231,7 +234,7 @@ fileInput.addEventListener('change', (e) => {
   });
 });
 
-// NEW: Updated Remove Image Logic
+// Updated Remove Image Logic
 async function removeImage(id) {
   if (!confirm('Remove this image?')) return;
   try {
@@ -252,7 +255,7 @@ async function removeImage(id) {
   }
 }
 
-// NEW: Updated Clear All Logic
+// Updated Clear All Logic
 clearBtn.addEventListener('click', async () => {
   if (!confirm('Remove all uploaded images? Default images will remain.')) return;
   try {
@@ -271,7 +274,7 @@ clearBtn.addEventListener('click', async () => {
 });
 
 
-// NEW FUNCTION: Render Quick Links
+// Render Quick Links
 function renderLinks() {
   linksList.innerHTML = '';
   if (quickLinks.length === 0) {
@@ -290,7 +293,7 @@ function renderLinks() {
   });
 }
 
-// NEW FUNCTION: Add Quick Link
+// Add Quick Link
 function addLink() {
   const name = newLinkName.value.trim();
   let url = newLinkUrl.value.trim();
@@ -319,7 +322,7 @@ function addLink() {
   });
 }
 
-// NEW FUNCTION: Remove Quick Link
+// Remove Quick Link
 function removeLink(index) {
   if (!confirm(`Are you sure you want to remove "${quickLinks[index].name}"?`)) return;
   quickLinks.splice(index, 1);
@@ -332,7 +335,7 @@ function removeLink(index) {
 
 // Event Listeners
 
-// --- Save Button Click Flicker Fixed ---
+// Save Button Click Flicker Fixed
 saveBtn.addEventListener('click', () => {
   const newSettings = {
     rotateInterval: Number(rotateInput.value) || 0,
@@ -351,7 +354,7 @@ saveBtn.addEventListener('click', () => {
 blurInput.addEventListener('input', (e) => { blurVal.textContent = e.target.value; });
 overlayInput.addEventListener('input', (e) => { overlayVal.textContent = e.target.value; });
 
-// NEW EVENT LISTENER for Add Link button
+// Event listener for Add Link button
 addLinkBtn.addEventListener('click', addLink);
 newLinkUrl.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
