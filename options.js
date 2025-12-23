@@ -332,7 +332,7 @@ function removeLink(index) {
 
 // Event Listeners
 
-// --- Save Button Click ---
+// --- Save Button Click Flicker Fixed ---
 saveBtn.addEventListener('click', () => {
   const newSettings = {
     rotateInterval: Number(rotateInput.value) || 0,
