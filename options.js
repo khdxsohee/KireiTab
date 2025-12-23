@@ -36,7 +36,7 @@ const newLinkUrl = document.getElementById('newLinkUrl');
 const addLinkBtn = document.getElementById('addLinkBtn');
 
 let quickLinks = []; // Local array to hold links
-// NEW: uploadedImageIDs now stores only the IDs (keys) from IndexedDB
+
 let uploadedImageIDs = [];
 // This map will store Object URLs for uploaded images for preview only
 const objectUrlMap = new Map();
@@ -332,15 +332,17 @@ function removeLink(index) {
 
 // Event Listeners
 
+// --- Save Button Click ---
 saveBtn.addEventListener('click', () => {
   const newSettings = {
     rotateInterval: Number(rotateInput.value) || 0,
     randomize: !!randomizeCheckbox.checked,
+    showQuotes: !!document.getElementById('showQuotesCheckbox').checked, // Save checkbox state
     blur: Number(blurInput.value) || 0,
     overlayOpacity: Number(overlayInput.value) || 0.35,
-    // Time Format Save
-    timeFormat: timeFormat12h.checked ? '12h' : '24h'
+    timeFormat: document.getElementById('timeFormat12h').checked ? '12h' : '24h'
   };
+
   chrome.storage.local.set({ settings: newSettings }, () => {
     showMessage('Settings saved successfully!');
   });
