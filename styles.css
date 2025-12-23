@@ -1138,7 +1138,7 @@ input[type="checkbox"] {
     color: var(--muted);
     font-weight: 600;
 }
-/* CSS mein isse default hide rakhein */
+
 #quote-container {
     display: none;
 }
