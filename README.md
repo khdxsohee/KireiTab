@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/version-v1.2.3-blue.svg)
+![Version](https://img.shields.io/badge/version-v1.3.40-blue.svg)
 [![GitHub license](https://img.shields.io/github/license/khdxsohee/KireiTab?style=flat-square&color=blue)](https://github.com/khdxsohee/KireiTab/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/khdxsohee/KireiTab?style=flat-square&color=red)](https://github.com/khdxsohee/KireiTab/issues)
 [![GitHub forks](https://img.shields.io/github/forks/khdxsohee/KireiTab?style=flat-square&color=teal)](https://github.com/khdxsohee/KireiTab/network)
@@ -18,7 +18,7 @@ KireiTab is designed for speed, style, and personalization.
 
 | Category | Feature | Description |
 | :--- | :--- | :--- |
-| **🖼️ Visuals** | **Custom HD Backgrounds** | Easily **upload your own** high-resolution anime images. |
+| **🖼️ Visuals** | **Custom HD Backgrounds** | Easily **upload your own** high-resolution images. |
 | | **Image Rotation** | Set a time interval to **automatically cycle** through your stored backgrounds. |
 | | **📜 Dynamic Anime Quotes (New!)** | New Feature: Added dynamic Anime Quotes with async loading and a flicker-free UI for a smoother experience. |
 | | **Visual FX Controls** | Adjust **blur** and **overlay darkness** to ensure text is always readable over your favorite images. |
@@ -34,7 +34,6 @@ KireiTab is designed for speed, style, and personalization.
 
 
 
-Personalization
 
 ## 🚀 Installation
 
@@ -86,6 +85,9 @@ All settings are managed through the **Options Page**, accessible via the gear i
   * Scroll to the **Quick Links Management** section.
   * Use the **"Add Link"** form to quickly populate your dashboard with custom links. Links are displayed dynamically on the main New Tab screen.
 
+### System Settings
+* Performance: Toggle animations or hardware acceleration based on your device capabilities.
+* Data: Backup your entire setup (links, images, todos) to a JSON file or restore from a previous backup.
 -----
 
 ## 🤝 Contributing 
