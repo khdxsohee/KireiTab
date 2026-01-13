@@ -1,98 +1,579 @@
 <!--
  ===================================================================
  * PROJECT: KireiTab
- * VERSION: v1.2.3 - Major Feature Update UI & Bugs Fixed
- * DATE: 2025-12-22
+ * VERSION: v1.3.40 - Major UI update & Performance Enhancement
+ * DATE: 2026-01-13
  * AUTHOR: khdxsohee
  * ===================================================================
 -->
-
 <!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Options - New Tab</title>
+  <title>Settings - KireiTab Dashboard</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="options-wrap">
-    <h2>Customize New Tab</h2>
-
-    <div id="msg" class="message-box"></div>
-
-    <h3>Background Images</h3>
-    <div class="small" style="opacity:1; margin-top:-10px;">
-      **Default Images:** 1.jpg, 2.jpg, 3.jpg must be in the **images folder** in your extension's root directory. You
-      can remove the uploaded images below.
-    </div>
-  <div>
-      <label>Upload custom background images (recommended HD JPG/PNG)</label>
-      <input id="fileInput" type="file" accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, image/svg+xml" multiple />
-      <div class="small">You can upload multiple images. Supported types: JPG, PNG, JPEG, WebP, GIF, SVG. They will be saved locally to your browser storage.</div>
-    </div>
-
-    <div style="margin-top:5px">
-      <button id="clearBtn" class="btn">Remove all uploaded images</button>
-    </div>
-
-    <div id="previewRow" class="thumbs" style="margin-top:15px">
-    </div>
-
-    <hr class="separator">
-    <h3>System Settings</h3>
-
-    <div>
-      <label>Time Format</label>
-      <div class="radio-group">
-        <label><input type="radio" name="timeFormat" id="timeFormat24h" value="24h" checked> 24-Hour (14:30)</label>
-        <label><input type="radio" name="timeFormat" id="timeFormat12h" value="12h"> 12-Hour (2:30 PM)</label>
+  <div class="dashboard-container">
+    <!-- Left Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="brand-icon"></div>
+          <div>
+            <div class="brand-text">KireiTab</div>
+            <div class="brand-subtitle"> v1.3.40</div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div>
-      <label>Rotate interval (seconds) — 0 to disable automatic rotation</label>
-      <input id="rotateInput" type="number" min="0" step="1" value="0" />
-    </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Appearance</div>
+          <a class="nav-item active" data-section="background">
+            <div class="nav-icon">🎨</div>
+            <span class="nav-text">Background</span>
+            <span class="nav-badge" id="imagesBadge">3</span>
+          </a>
+          <a class="nav-item" data-section="display">
+            <div class="nav-icon">🖥️</div>
+            <span class="nav-text">Display</span>
+          </a>
+          <a class="nav-item" data-section="quotes">
+            <div class="nav-icon">💬</div>
+            <span class="nav-text">Quotes</span>
+          </a>
+        </div>
 
-    <div>
-      <label><input id="randomizeCheckbox" type="checkbox" checked /> Randomize first background image on load</label>
-    </div>
-<div>
-  <label><input id="showQuotesCheckbox" type="checkbox" checked/> Show Anime Quotes on New Tab</label>
-</div>
-    <div>
-      <label>Background blur (px)</label>
-      <input id="blurInput" type="range" min="0" max="12" value="0" />
-      <span id="blurVal" class="small">0</span>
-    </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Functionality</div>
+          <a class="nav-item" data-section="quick-links">
+            <div class="nav-icon">🔗</div>
+            <span class="nav-text">Quick Links</span>
+            <span class="nav-badge" id="linksBadge">3</span>
+          </a>
+          <a class="nav-item" data-section="apps">
+            <div class="nav-icon">📱</div>
+            <span class="nav-text">Apps</span>
+          </a>
+          <a class="nav-item" data-section="todos">
+            <div class="nav-icon">✅</div>
+            <span class="nav-text">Todo List</span>
+          </a>
+        </div>
 
-    <div>
-      <label>Overlay darkness (0.0 - 1.0)</label>
-      <input id="overlayInput" type="range" min="0" max="1" step="0.05" value="0.35" />
-      <span id="overlayVal" class="small">0.35</span>
-    </div>
+        <div class="nav-section">
+          <div class="nav-section-title">System</div>
+          <a class="nav-item" data-section="performance">
+            <div class="nav-icon">⚡</div>
+            <span class="nav-text">Performance</span>
+          </a>
+          <a class="nav-item" data-section="backup">
+            <div class="nav-icon">💾</div>
+            <span class="nav-text">Backup & Restore</span>
+          </a>
+          <a class="nav-item" data-section="about">
+            <div class="nav-icon">ℹ️</div>
+            <span class="nav-text">About</span>
+          </a>
+        </div>
+      </nav>
 
-    <hr class="separator">
-    <h3>Quick Links Management</h3>
-    <div id="quickLinkManager">
-      <div id="linksList" class="links-list">
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar">K</div>
+          <div class="user-info">
+            <h4>Settings</h4>
+            <p>Settings Manager</p>
+          </div>
+        </div>
       </div>
-      <div class="add-link-form">
-        <input type="text" id="newLinkName" placeholder="Link Name (e.g., Gmail)" style="flex:1;">
-        <input type="url" id="newLinkUrl" placeholder="URL (e.g., https://mail.google.com)" style="flex:2;">
-        <button id="addLinkBtn" class="btn" style="flex:0 0 100px;">Add Link</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      <!-- Floating Background Elements -->
+      <div class="floating-element floating-1"></div>
+      <div class="floating-element floating-2"></div>
+
+      <!-- Page Header -->
+      <header class="page-header">
+        <h1 class="page-title">Dashboard Settings</h1>
+        <p class="page-subtitle">Manage your new tab customization and preferences</p>
+      </header>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="imagesCount">0</div>
+          <div class="stat-label">Background Images</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="linksCount">0</div>
+          <div class="stat-label">Quick Links</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="storageUsed">0MB</div>
+          <div class="stat-label">Storage Used</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">
+            <span class="status-indicator status-active" id="statusIndicator">● Active</span>
+          </div>
+          <div class="stat-label">Extension Status</div>
+        </div>
       </div>
-      <div class="small" style="margin-top:5px;">Only links starting with "http" or "https" will be saved.</div>
-    </div>
-    <hr class="separator">
 
-    <div style="margin-top:14px">
-      <button id="saveBtn" class="btn" style="width:100%">Save Settings</button>
-    </div>
+      <!-- Message Box -->
+      <div id="msg" class="message-box"></div>
 
+      <!-- Background Section -->
+      <section id="background" class="content-section active">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">🎨</div>
+                Background Images
+              </h2>
+              <p class="card-subtitle">Upload and manage your background images</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Upload Images</label>
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon">📁</div>
+              <div class="upload-text">Drag & drop images here</div>
+              <div class="upload-hint">or click to browse (JPG, PNG, WebP, GIF, SVG)</div>
+              <input id="fileInput" type="file" accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, image/svg+xml" multiple style="display: none;" />
+            </div>
+            <div class="control-hint">
+              Default images: 1.jpg, 2.jpg, 3.jpg in your extension's images folder. Uploaded images are saved to browser storage.
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Image Gallery</label>
+            <div class="thumb-grid" id="previewRow">
+              <!-- Thumbnails will be inserted here -->
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="clearBtn" class="btn-secondary">Remove All Uploaded Images</button>
+            <button id="refreshBtn" class="btn-secondary">Refresh Gallery</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Display Section -->
+      <section id="display" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">🖥️</div>
+                Display Settings
+              </h2>
+              <p class="card-subtitle">Customize how content appears on your new tab</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Time Format</label>
+            <div class="radio-group">
+              <label><input type="radio" name="timeFormat" id="timeFormat24h" value="24h" checked> 24-Hour (14:30)</label>
+              <label><input type="radio" name="timeFormat" id="timeFormat12h" value="12h"> 12-Hour (2:30 PM)</label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Background Rotation</label>
+            <input id="rotateInput" class="modern-input" type="number" min="0" step="1" value="0" placeholder="Rotation interval in seconds (0 to disable)" />
+            <div class="control-hint">Set to 0 to disable automatic background rotation</div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="randomizeCheckbox" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Randomize first background image on load</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="showQuotesCheckbox" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Show Anime Quotes on New Tab</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Background Effects</label>
+            <div class="range-slider">
+              <label>Blur (px): <span id="blurVal">0</span></label>
+              <input id="blurInput" type="range" min="0" max="12" value="0" class="modern-range" />
+            </div>
+            <div class="range-slider">
+              <label>Overlay Darkness: <span id="overlayVal">0.35</span></label>
+              <input id="overlayInput" type="range" min="0" max="1" step="0.05" value="0.35" class="modern-range" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quotes Section -->
+      <section id="quotes" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">💬</div>
+                Quotes Settings
+              </h2>
+              <p class="card-subtitle">Customize inspirational quotes display</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="quotesEnabled" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Enable Quotes Display</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Quote Category</label>
+            <select id="quotesCategory" class="modern-input">
+              <option value="anime">Anime Quotes</option>
+              <option value="motivational">Motivational</option>
+              <option value="wisdom">Wisdom</option>
+              <option value="funny">Funny</option>
+              <option value="all">All Categories</option>
+            </select>
+            <div class="control-hint">Select the type of quotes to display</div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="autoRefreshCheckbox" type="checkbox" />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Auto-refresh quotes periodically</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Refresh Interval (seconds)</label>
+            <input id="refreshInterval" class="modern-input" type="number" min="60" step="30" value="300" />
+            <div class="control-hint">How often to fetch new quotes (minimum 60 seconds)</div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="refreshQuotesBtn" class="btn-secondary">Refresh Quotes Now</button>
+            <button id="clearCacheBtn" class="btn-secondary">Clear Quote Cache</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Links Section -->
+      <section id="quick-links" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">🔗</div>
+                Quick Links Management
+              </h2>
+              <p class="card-subtitle">Manage your frequently visited websites</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Add New Link</label>
+            <div class="add-link-form">
+              <input type="text" id="newLinkName" class="modern-input" placeholder="Link Name (e.g., Gmail)" />
+              <input type="url" id="newLinkUrl" class="modern-input" placeholder="URL (e.g., https://mail.google.com)" />
+              <button id="addLinkBtn" class="btn-primary">Add Link</button>
+            </div>
+            <div class="control-hint">Only links starting with "http" or "https" will be saved.</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Saved Links</label>
+            <table class="links-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>URL</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="linksList">
+                <!-- Links will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Apps Section -->
+      <section id="apps" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">📱</div>
+                Quick Apps
+              </h2>
+              <p class="card-subtitle">Manage your favorite web applications</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Apps Grid</label>
+            <div class="apps-grid" id="appsGrid">
+              <!-- Apps will be inserted here -->
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Add New App</label>
+            <div class="add-link-form" style="flex-wrap: wrap; gap: 12px;">
+              <input type="text" id="appNameInput" class="modern-input" placeholder="App Name (e.g., Gmail)" style="flex: 1 1 200px;" />
+              <input type="url" id="appUrlInput" class="modern-input" placeholder="URL (e.g., https://mail.google.com)" style="flex: 1 1 300px;" />
+              <input type="text" id="appIconInput" class="modern-input" placeholder="Icon emoji (e.g., 📧)" style="flex: 0 1 100px;" />
+              <button id="addAppBtn" class="btn-primary" style="flex: 0 1 120px;">Add App</button>
+            </div>
+            <div class="control-hint">Use emoji or text for icons. Click on apps to open them.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Todos Section -->
+      <section id="todos" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">✅</div>
+                Todo List
+              </h2>
+              <p class="card-subtitle">Manage your daily tasks and reminders</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Add New Task</label>
+            <div class="add-link-form">
+              <input type="text" id="newTodoInput" class="modern-input" placeholder="✏️ Add a new task..." />
+              <button id="addTodoBtn" class="btn-primary">Add Task</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Your Tasks</label>
+            <div class="todos-list" id="todosList">
+              <!-- Todos will be inserted here -->
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="clearCompletedBtn" class="btn-secondary">Clear Completed Tasks</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Performance Section -->
+      <section id="performance" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">⚡</div>
+                Performance Settings
+              </h2>
+              <p class="card-subtitle">Optimize extension performance and resource usage</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Performance Level</label>
+            <select id="performanceLevel" class="modern-input">
+              <option value="power-saver">Power Saver</option>
+              <option value="balanced" selected>Balanced</option>
+              <option value="performance">High Performance</option>
+            </select>
+            <div class="control-hint">Adjust based on your system capabilities</div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="enableAnimations" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Enable Animations & Transitions</span>
+            </div>
+            <div class="control-hint">Disable for smoother performance on older devices</div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="hardwareAcceleration" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Enable Hardware Acceleration</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="switch-toggle">
+              <label class="switch">
+                <input id="cacheCheckbox" type="checkbox" checked />
+                <span class="switch-slider"></span>
+              </label>
+              <span>Enable Image & Data Caching</span>
+            </div>
+            <div class="control-hint">Caching improves loading speed</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Memory Usage</label>
+            <div class="progress-bar">
+              <div class="progress-fill" id="memoryUsage" style="width: 45%;"></div>
+            </div>
+            <div class="control-hint">Current memory usage: <span id="memoryText">45MB</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Backup Section -->
+      <section id="backup" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">💾</div>
+                Backup & Restore
+              </h2>
+              <p class="card-subtitle">Backup your settings or restore from backup</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Export Settings</label>
+            <div class="action-buttons">
+              <button id="exportBtn" class="btn-primary">Export All Settings</button>
+            </div>
+            <div class="control-hint">Creates a JSON file with all your current settings</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Import Settings</label>
+            <div class="action-buttons">
+              <button id="importBtn" class="btn-secondary">Select Backup File</button>
+              <input type="file" id="importInput" accept=".json" style="display: none;" />
+            </div>
+            <div class="control-hint">Restore settings from a previously exported backup file</div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Backup Information</label>
+            <div class="info-box">
+              <div class="info-item">
+                <span>Last Backup:</span>
+                <span id="lastBackup">Never</span>
+              </div>
+              <div class="info-item">
+                <span>Settings Version:</span>
+                <span id="settingsVersion">1.2.3</span>
+              </div>
+              <div class="info-item">
+                <span>Total Items:</span>
+                <span id="totalItems">0 items</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="content-section">
+        <div class="section-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">
+                <div class="card-icon">ℹ️</div>
+                About KireiTab
+              </h2>
+              <p class="card-subtitle">Information about this extension</p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="about-content">
+              <div class="about-logo">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; margin: 0 auto 20px;">
+                  ⚡
+                </div>
+              </div>
+              
+              <h3 style="text-align: center; margin-bottom: 20px; color: white;">KireiTab v<span id="version">1.2.3</span></h3>
+              
+              <div class="info-box">
+                <div class="info-item">
+                  <span>Author:</span>
+                  <span>khdxsohee</span>
+                </div>
+                <div class="info-item">
+                  <span>License:</span>
+                  <span>MIT</span>
+                </div>
+                <div class="info-item">
+                  <span>Last Update:</span>
+                  <span>2026-01-13</span>
+                </div>
+                <div class="info-item">
+                  <span>Browser Support:</span>
+                  <span>Chrome, Edge, Firefox</span>
+                </div>
+              </div>
+
+              <div class="control-hint" style="text-align: center; margin-top: 30px;">
+                KireiTab is a customizable new tab page with beautiful backgrounds, weather, todo list, and quick links.
+                Built for productivity and aesthetics.
+              </div>
+
+              <div class="action-buttons" style="justify-content: center; margin-top: 30px;">
+                <button class="btn-secondary" onclick="window.open('https://github.com/khdxsohee/kireitab', '_blank')">GitHub</button>
+                <button class="btn-secondary" onclick="window.open('https://github.com/khdxsohee/kireitab/issues', '_blank')">Report Issue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Save Button -->
+      <div class="action-buttons" style="margin-top: 40px;">
+        <button id="saveBtn" class="btn-primary" style="flex: 1;">Save All Changes</button>
+        <button id="resetBtn" class="btn-secondary">Reset to Defaults</button>
+      </div>
+    </main>
   </div>
 
   <script src="db.js"></script>

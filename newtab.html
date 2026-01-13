@@ -1,8 +1,8 @@
 <!--
  ===================================================================
  * PROJECT: KireiTab
- * VERSION: v1.2.3 - Major Feature Update UI & Bugs Fixed
- * DATE: 2025-12-22
+ * VERSION: v1.3.40 - Major UI update & Performance Enhancement
+ * DATE: 2026-01-13
  * AUTHOR: khdxsohee
  * ===================================================================
  -->
@@ -10,100 +10,114 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KireiTab</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      overflow: hidden;
-    }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KireiTab</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            overflow: hidden;
+        }
+    </style>
 </head>
 
 <body>
-  <div id="bg" class="bg"></div>
+    <script>
+        // service worker (New Feature)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(function (registration) {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(function (error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 
-  <div class="overlay" id="overlay"></div>
+    <div id="bg" class="bg"></div>
 
-  <main class="container">
-    <header class="top-row">
-        <div class="weather-placeholder">
-            <span class="icon" id="weatherIcon">☁️</span>
-            <span class="temp" id="weatherTemp">--°C</span>
-            <div class="location" id="weatherLocation">Click to enable</div>
-        </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="container">
+        <header class="top-row">
+            <div class="weather-placeholder">
+                <span class="icon" id="weatherIcon">☁️</span>
+                <span class="temp" id="weatherTemp">--°C</span>
+                <div class="location" id="weatherLocation">Click to enable</div>
+            </div>
         </header>
 
-    <section class="main-content">
-      <form id="searchForm" class="search-form" autocomplete="off">
-        <div class="search-icon">🔍︎</div>
-        <input id="searchInput" class="search-input" name="q" type="search"
-          placeholder="Search" />
-      </form>
+        <section class="main-content">
+            <form id="searchForm" class="search-form" autocomplete="off">
+                <div class="search-icon">🔍︎</div>
+                <input id="searchInput" class="search-input" name="q" type="search" placeholder="Search" />
+            </form>
 
-    <div id="quote-container" class="quote-container">
-    <p id="quote-text">"Loading inspiration..."</p>
-    <span id="quote-author">- KireiTab</span>
-</div>
-<div class="center-time">
-  <div id="clock" class="clock"><span class="ampm"></span></div>
-  <div id="date-display" class="date-display"></div>
-</div>
-    </section>
-
-<footer class="bottom-bar">
-    <a class="bottom-link" id="open-options" title="Settings">
-        <img src="icons/settings.png" class="icon-img" alt="Settings Icon">
-        Settings
-    </a>
-    <a class="bottom-link" id="open-apps" title="Apps">
-        <img src="icons/app.png" class="icon-img" alt="Apps Icon">
-        Apps
-    </a>
-    <a class="bottom-link" id="open-todos" title="Todos">
-        <img src="icons/to-do-list.png" class="icon-img" alt="Todos Icon">
-        Todos
-    </a>
-</footer>
-
-<!-- Apps Modal -->
-<div id="appsModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>🚀 Quick Apps</h3>
-            <span class="close">&times;</span>
-        </div>
-        <div class="apps-grid" id="appsGrid">
-        </div>
-    </div>
-</div>
-
-<!-- Todos Modal -->
-<div id="todosModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>📝 My Todo List</h3>
-            <span class="close">&times;</span>
-        </div>
-        <div class="todos-container">
-            <div class="add-todo-form">
-                <input type="text" id="newTodoInput" placeholder="✏️ Add a new task..." />
-                <button id="addTodoBtn" class="btn">Add Task</button>
+            <div id="quote-container" class="quote-container">
+                <p id="quote-text">"Loading inspiration..."</p>
+                <span id="quote-author">- KireiTab</span>
             </div>
-            <div class="todos-list" id="todosList">
+            <div class="center-time">
+                <div id="clock" class="clock"><span class="ampm"></span></div>
+                <div id="date-display" class="date-display"></div>
+            </div>
+        </section>
+
+        <footer class="bottom-bar">
+            <a class="bottom-link" id="open-options" title="Settings">
+                <img src="icons/settings.png" class="icon-img" alt="Settings Icon">
+                Settings
+            </a>
+            <a class="bottom-link" id="open-apps" title="Apps">
+                <img src="icons/app.png" class="icon-img" alt="Apps Icon">
+                Apps
+            </a>
+            <a class="bottom-link" id="open-todos" title="Todos">
+                <img src="icons/to-do-list.png" class="icon-img" alt="Todos Icon">
+                Todos
+            </a>
+        </footer>
+
+        <!-- Apps Modal -->
+        <div id="appsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🚀 Quick Apps</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="apps-grid" id="appsGrid">
+                </div>
             </div>
         </div>
-    </div>
-</div>
-    </div>
-</div>
-    </footer>
 
-  </main>
+        <!-- Todos Modal -->
+        <div id="todosModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>My Todo List</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="todos-container">
+                    <div class="add-todo-form">
+                        <input type="text" id="newTodoInput" placeholder="✏️ Add a new task..." />
+                        <button id="addTodoBtn" class="btn">Add Task</button>
+                    </div>
+                    <div class="todos-list" id="todosList">
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+        </footer>
 
-  <script src="db.js"></script>
-  <script src="newtab.js"></script>
+    </main>
+
+    <script src="db.js"></script>
+    <script src="newtab.js"></script>
 </body>
 
 </html>

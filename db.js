@@ -1,150 +1,98 @@
 /*
  ===================================================================
  * PROJECT: KireiTab
- * VERSION: v1.2.3 - Major Feature Update UI & Bugs Fixed
- * DATE: 2025-10-22
+ * DB MANAGER (IndexedDB for Unlimited Image Storage)
+ * VERSION: v1.3.40 - Major UI update & Performance Enhancement
+ * DATE: 2026-01-13
  * AUTHOR: khdxsohee
  * ===================================================================
 */
 
-const DB_NAME = 'KireiDB';
+const DB_NAME = 'KireiTabDB';
 const DB_VERSION = 1;
-const STORE_NAME = 'imagesStore';
+const STORE_NAME = 'images';
 
-/**
- * Initializes the IndexedDB database.
- * @returns {Promise<IDBDatabase>} A promise that resolves with the database object.
- */
-function openDB() {
+let db = null;
+
+// Initialize DB
+function initDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            // Create an object store to hold the image blobs
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
             if (!db.objectStoreNames.contains(STORE_NAME)) {
-                db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                db.createObjectStore(STORE_NAME);
             }
         };
 
-        request.onsuccess = (event) => {
-            resolve(event.target.result);
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            resolve(db);
         };
 
-        request.onerror = (event) => {
-            console.error("IndexedDB error:", event.target.errorCode);
-            reject(new Error("Failed to open IndexedDB"));
+        request.onerror = (e) => {
+            console.error('IndexedDB Error:', e);
+            reject('DB Error');
         };
     });
 }
 
-/**
- * Saves a Blob to the IndexedDB.
- * @param {Blob} blob The image blob to save.
- * @returns {Promise<number>} A promise that resolves with the unique ID of the saved image.
- */
+// Ensure DB is open before operations
+async function ensureDB() {
+    if (!db) await initDB();
+    return db;
+}
+
+// Save Image Blob
 async function saveImageBlob(blob) {
-    const db = await openDB();
+    const database = await ensureDB();
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const id = Date.now() + Math.random().toString(36).substr(2, 9);
+        const transaction = database.transaction([STORE_NAME], 'readwrite');
         const store = transaction.objectStore(STORE_NAME);
-        // We store the ID (auto-incremented) and the blob data
-        const request = store.add({ blob: blob });
+        const request = store.put(blob, id);
 
-        request.onsuccess = (event) => {
-            // The key (ID) is the result of the add operation
-            resolve(event.target.result);
-        };
-
-        request.onerror = (event) => {
-            console.error("Save image error:", event.target.error);
-            reject(new Error("Failed to save image to DB"));
-        };
+        request.onsuccess = () => resolve(id);
+        request.onerror = () => reject(request.error);
     });
 }
 
-/**
- * Retrieves an image Blob from the IndexedDB by its ID.
- * @param {number} id The ID of the image.
- * @returns {Promise<Blob|null>} A promise that resolves with the image Blob or null if not found.
- */
+// Get Image Blob
 async function getImageBlob(id) {
-    const db = await openDB();
+    const database = await ensureDB();
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const transaction = database.transaction([STORE_NAME], 'readonly');
         const store = transaction.objectStore(STORE_NAME);
         const request = store.get(id);
 
-        request.onsuccess = (event) => {
-            // The result will be an object { id: ..., blob: Blob }
-            resolve(event.target.result ? event.target.result.blob : null);
-        };
-
-        request.onerror = (event) => {
-            console.error("Get image error:", event.target.error);
-            reject(new Error("Failed to retrieve image from DB"));
-        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
     });
 }
 
-/**
- * Retrieves all stored image IDs from the IndexedDB.
- * @returns {Promise<number[]>} A promise that resolves with an array of image IDs.
- */
-async function getAllImageIds() {
-    const db = await openDB();
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readonly');
-        const store = transaction.objectStore(STORE_NAME);
-        const request = store.getAllKeys(); // Get only the keys (IDs)
-
-        request.onsuccess = (event) => {
-            resolve(event.target.result);
-        };
-
-        request.onerror = (event) => {
-            console.error("Get all keys error:", event.target.error);
-            reject(new Error("Failed to retrieve image IDs from DB"));
-        };
-    });
-}
-
-
-/**
- * Deletes an image record from the IndexedDB by its ID.
- * @param {number} id The ID of the image to delete.
- * @returns {Promise<void>} A promise that resolves when the deletion is complete.
- */
+// Delete Image
 async function deleteImage(id) {
-    const db = await openDB();
+    const database = await ensureDB();
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const transaction = database.transaction([STORE_NAME], 'readwrite');
         const store = transaction.objectStore(STORE_NAME);
         const request = store.delete(id);
 
         request.onsuccess = () => resolve();
-        request.onerror = (event) => {
-            console.error("Delete image error:", event.target.error);
-            reject(new Error("Failed to delete image from DB"));
-        };
+        request.onerror = () => reject(request.error);
     });
 }
 
-/**
- * Deletes all image records from the IndexedDB.
- * @returns {Promise<void>} A promise that resolves when the store is cleared.
- */
+// Clear All Images (used in reset)
 async function clearAllImages() {
-    const db = await openDB();
+    const database = await ensureDB();
     return new Promise((resolve, reject) => {
-        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const transaction = database.transaction([STORE_NAME], 'readwrite');
         const store = transaction.objectStore(STORE_NAME);
         const request = store.clear();
 
         request.onsuccess = () => resolve();
-        request.onerror = (event) => {
-            console.error("Clear images error:", event.target.error);
-            reject(new Error("Failed to clear images from DB"));
-        };
+        request.onerror = () => reject(request.error);
     });
 }
