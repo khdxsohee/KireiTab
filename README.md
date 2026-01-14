@@ -30,7 +30,8 @@ KireiTab is designed for speed, style, and personalization.
 | | **Fast Search Focus** | Hit the **`/` key** anywhere on the page to instantly focus the search bar. |
 | | **Private & Local Storage** | All settings, quick links, and custom images are stored locally in your browser's IndexedDB and Chrome storage, ensuring full privacy and speed.. |
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/97fe1a89-2585-4e86-8c0c-b5c587293688" />
+<img width="1366" height="768" alt="Screenshot (33)" src="https://github.com/user-attachments/assets/c4d86529-af7f-481c-9823-f6a94abcc4b2" />
+
 
 
 
